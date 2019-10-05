@@ -38,10 +38,10 @@ Route::group(
 
 //new add----------------------------------
 Route::get('/categories', function () {
-    echo "helo cate";
+    return view('backend.categories.categories');
 })->name('user.categories');
 Route::get('/articles', function () {
-    echo "hello arrticles";
+    return view('backend.articles.articles');
 })->name('user.articles');
 //--------------------------------
 Route::get('/public/exam', 'Backend\ExamController@indexPublic')->name('public.exam_list');

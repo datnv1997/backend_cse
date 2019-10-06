@@ -129,4 +129,22 @@ class ArticleController extends Controller
         ],400);
 
     }
+
+    public function listTopArticle()
+    {
+        // $event = Articles::select('id', 'name', 'subDescription', 'images', 'createdDate')->orderBy('createdDate', 'DESC')->take(3)->get();
+
+        // if ( count($event) > 0){
+        //     return response()->json([
+        //         "code"=>"200",
+        //         "message"=>"list category",
+        //         "data"=>$event
+        //     ],200);
+        // }
+
+        // return response()->json([
+        //     "message"=>"data is null"
+        // ],400);
+
+    }
 }

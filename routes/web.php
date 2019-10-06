@@ -47,9 +47,20 @@ Route::post('/editCategories/{id}', 'CategoryController@edit');
 Route::post('/updateCategoryController/{id}', 'CategoryController@update')->name('user.updateCategoryController');
 Route::get('/categories', 'CategoryController@index')->name('user.categories');
 
-Route::get('/articles', function () {
-    return view('backend.articles.articles');
-})->name('user.articles');
+//articles
+
+Route::get('/articles', 'ArticleController@index')->name('user.articles');
+Route::get('/addArticles', 'ArticleController@add')->name('user.addArticle');
+// Route::post('/addCategoryController', 'CategoryController@create')->name('user.addCategoryController');
+// Route::post('/delCategories/{id}', 'CategoryController@destroy');
+// Route::post('/editCategories/{id}', 'CategoryController@edit');
+// Route::post('/updateCategoryController/{id}', 'CategoryController@update')->name('user.updateCategoryController');
+// Route::get('/categories', 'CategoryController@index')->name('user.categories');
+
+// Route::get('/articles', function () {
+//     return view('backend.articles.articles');
+// })->name('user.articles');
+
 //--------------------------------
 Route::get('/public/exam', 'Backend\ExamController@indexPublic')->name('public.exam_list');
 Route::any('/online-result', 'Backend\ReportController@marksheetPublic')->name('report.marksheet_pub');

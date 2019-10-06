@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Articles;
+use App\Categories;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -14,8 +16,16 @@ class ArticleController extends Controller
     public function index()
     {
         //
-    }
+        $obj = Articles::all();
 
+        return view('backend.articles.articles', compact('obj'));
+    }
+    public function add()
+    {
+        $obj = Categories::whereNotNull('parentId')->get();
+
+        return view('backend.articles.articles', compact('obj'));
+    }
     /**
      * Show the form for creating a new resource.
      *

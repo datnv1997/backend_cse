@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Categories;
 
 use App\Categories;
 use Carbon\Carbon;
@@ -173,39 +172,41 @@ class CategoryController extends Controller
 
     }
 
-    public function getAllCategory() {
-        $data = Categories::select('id', 'name')->whereNull('parentId') ->get();
+    public function getAllCategory()
+    {
+        $data = Categories::select('id', 'name')->whereNull('parentId')->get();
 
-        if ( count($data) > 0){
+        if (count($data) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list category",
-                "data"=>$data
-            ],200);
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
+            "message" => "data is null",
+        ], 400);
 
     }
-    
-    public function getSubCategory() {
 
-        $data =  Categories::select('id', 'name', 'parentId')->whereNotNull('parentId') ->get();
+    public function getSubCategory()
+    {
 
-        if ( count($data) > 0){
+        $data = Categories::select('id', 'name', 'parentId')->whereNotNull('parentId')->get();
+
+        if (count($data) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list category",
-                "data"=>$data
-            ],200);
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
-    
+            "message" => "data is null",
+        ], 400);
+
     }
 
 }

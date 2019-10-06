@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Articles;
 use App\Categories;
+
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -90,5 +91,42 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // lấy dánh sách các bài viết
+    public function getArticle($id) {
+
+        $data = Articles::select('id', 'name', 'subDescription', 'images', 'categoryIds' )->where('categoryIds', $id) ->get();
+
+        if ( count($data) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list article",
+                "data"=>$data
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+    } 
+
+    // lấy chi tiết bài viết 
+    public function getDetailArticle($id) {
+
+        $data = Articles::all()->where('id', $id);
+
+        if ( count($data) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list detail article",
+                "data"=>$data
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+
     }
 }

@@ -147,5 +147,6 @@ $(document).ready(function() {
         'select[name="section_id"] option[selected]').text() + ')');
 });
 </script>
+<script src="//cdn.ckeditor.com/4.13.0/full/ckeditor.js"></script>
 @endsection
 <!-- END PAGE JS-->

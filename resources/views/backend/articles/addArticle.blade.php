@@ -43,32 +43,19 @@
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group has-feedback">
-                                    <label for="name">Mô tả ngắn<span class="text-danger"></span></label>
-                                    <input autofocus type="text" class="form-control" name="subDescription"
-                                        placeholder="Mô tả ngắn phân loại" value="">
-                                    <!-- <span class="fa fa-info form-control-feedback"></span> -->
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
-                                </div>
-                            </div>
 
                             <div class="col-md-4">
                                 <div class="form-group has-feedback">
                                     <label for="sel1">Phân loại</label>
                                     <select class="form-control" name="sel">
                                         <option value=''>-</option>
-
-
+                                        @foreach($obj as $data)
+                                        <option value="{{$data->name}}">{{$data->name}}</option>
+                                        @endforeach
                                     </select>
-
                                     <span class="text-danger">{{ $errors->first('description') }}</span>
                                 </div>
                             </div>
-
-
-                        </div>
-                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group has-feedback">
                                     <label for="photo">Photo<span class="text-danger">[min 150 X 150 size and max
@@ -80,6 +67,19 @@
                                     <span class="text-danger">{{ $errors->first('photo') }}</span>
                                 </div>
                             </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group has-feedback">
+                                    <label for="name">Mô tả ngắn<span class="text-danger"></span></label>
+                                    <textarea type="text" class="form-control" rows="5" name="subDescription"
+                                        placeholder="Mô tả ngắn phân loại"></textarea>
+                                    <!-- <span class="fa fa-info form-control-feedback"></span> -->
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-12">
@@ -119,6 +119,10 @@ $(document).ready(function() {
     Academic.studentInit();
 
 });
+</script>
+<script src="//cdn.ckeditor.com/4.13.0/full/ckeditor.js"></script>
+<script>
+CKEDITOR.replace('description');
 </script>
 @endsection
 <!-- END PAGE JS-->

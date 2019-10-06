@@ -24,7 +24,7 @@ class ArticleController extends Controller
     {
         $obj = Categories::whereNotNull('parentId')->get();
 
-        return view('backend.articles.articles', compact('obj'));
+        return view('backend.articles.addArticle', compact('obj'));
     }
     /**
      * Show the form for creating a new resource.

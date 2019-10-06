@@ -51,7 +51,7 @@
                                     <select class="form-control" name="sel">
                                         <option value=''>-</option>
                                         @foreach($obj as $data)
-                                        <option>{{$data->name}}</option>
+                                        <option value="{{$data->name}}">{{$data->name}}</option>
                                         @endforeach
 
                                     </select>

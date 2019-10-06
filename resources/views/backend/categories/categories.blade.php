@@ -59,15 +59,13 @@
                             width="100%">
                             <thead>
                                 <tr>
-                                    <th width="5%">#</th>
-                                    <th class="notexport" width="7%">Photo</th>
-                                    <th width="8%">Regi. No.</th>
-                                    <th width="8%">Roll No.</th>
-                                    <th width="8%">ID Card</th>
-                                    <th width="19%">Name</th>
-                                    <th width="10%">Phone No</th>
-                                    <th width="10%">Email</th>
-                                    <th width="10%">Status</th>
+                                    <th width="5%">id</th>
+                                    <th class="notexport" width="7%">Tên</th>
+                                    <th width="20%">Mô tả</th>
+                                    <th width="8%">Images</th>
+                                    <th width="20%">Cấp trước đó</th>
+                                    <th width="19%">id cấp trước</th>
+                                    <th width="10%">Ngày tạo</th>
                                     <th class="notexport" width="15%">Action</th>
                                 </tr>
                             </thead>

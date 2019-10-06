@@ -37,9 +37,16 @@ Route::group(
 );
 
 //new add----------------------------------
-Route::get('/categories', function () {
-    return view('backend.categories.categories');
-})->name('user.categories');
+
+//categories
+Route::get('/categories', 'CategoryController@index')->name('user.categories');
+Route::get('/addCategories', 'CategoryController@add')->name('user.addCate');
+Route::post('/addCategoryController', 'CategoryController@create')->name('user.addCategoryController');
+Route::post('/delCategories/{id}', 'CategoryController@destroy');
+Route::post('/editCategories/{id}', 'CategoryController@edit');
+Route::post('/updateCategoryController/{id}', 'CategoryController@update')->name('user.updateCategoryController');
+Route::get('/categories', 'CategoryController@index')->name('user.categories');
+
 Route::get('/articles', function () {
     return view('backend.articles.articles');
 })->name('user.articles');

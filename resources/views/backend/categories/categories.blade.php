@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="box-tools pull-right">
-                        <a class="btn btn-info btn-sm" href="{{ URL::route('student.create') }}"><i
+                        <a class="btn btn-info btn-sm" href="{{ URL::route('user.addCate') }}"><i
                                 class="fa fa-plus-circle"></i> Add New</a>
                     </div>
                 </div>
@@ -59,33 +59,68 @@
                             width="100%">
                             <thead>
                                 <tr>
-                                    <th width="5%">id</th>
-                                    <th class="notexport" width="7%">Tên</th>
-                                    <th width="20%">Mô tả</th>
-                                    <th width="8%">Images</th>
-                                    <th width="20%">Cấp trước đó</th>
-                                    <th width="19%">id cấp trước</th>
+                                    <th width="15%">id</th>
+                                    <th class="notexport" width="15%">Tên</th>
+                                    <th width="10%">Mô tả</th>
+                                    <!-- <th width="8%">Images</th> -->
+                                    <th width="15%">Cấp trước đó</th>
+                                    <th width="15%">id cấp trước</th>
                                     <th width="10%">Ngày tạo</th>
-                                    <th class="notexport" width="15%">Action</th>
+                                    <th class="notexport" width="25%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($obj as $data)
 
                                 <tr>
 
-                                </tr>
+                                    <td>{{$data->id}}</td>
+                                    <td>{{$data->name}}</td>
+                                    <td>{{$data->description}}</td>
+                                    <!-- <td>{{$data->images}}</td> -->
+                                    <td>{{$data->preLevel}}</td>
+                                    <td>{{$data->parentId}}</td>
+                                    <td>{{$data->createdDate}}</td>
+                                    <td>
+                                        <!-- <div class="btn-group">
+                                            <a title="Details" href="" class="btn btn-primary btn-sm"><i
+                                                    class="fa fa-eye"></i>
+                                            </a>
+                                        </div> -->
+                                        <div class="btn-group">
+                                            <form method="POST" action="{{url('/editCategories/'.$data->id)}}">
+                                                @csrf
+                                                <button title="Edit" type="submit" class="btn btn-info btn-sm"><i
+                                                        class="fa fa-edit"></i>
+                                                </button>
+                                            </form>
+                                        </div>
 
+                                        <div class="btn-group">
+                                            <form class="myAction" method="POST"
+                                                action="{{url('/delCategories/'.$data->id)}}">
+                                                @csrf
+                                                <!-- <input name="_method" type="hidden" value="DELETE"> -->
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                    <i class="fa fa-fw fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th width="5%">id</th>
-                                    <th class="notexport" width="7%">Tên</th>
-                                    <th width="20%">Mô tả</th>
-                                    <th width="8%">Images</th>
-                                    <th width="20%">Cấp trước đó</th>
-                                    <th width="19%">id cấp trước</th>
+                                    <th width="15%">id</th>
+                                    <th class="notexport" width="15%">Tên</th>
+                                    <th width="10%">Mô tả</th>
+                                    <!-- <th width="8%">Images</th> -->
+                                    <th width="15%">Cấp trước đó</th>
+                                    <th width="15%">id cấp trước</th>
                                     <th width="10%">Ngày tạo</th>
-                                    <th class="notexport" width="15%">Action</th>
+                                    <th class="notexport" width="25%">Action</th>
                                 </tr>
                             </tfoot>
                         </table>

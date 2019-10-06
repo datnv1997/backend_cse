@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Categories;
 
 use App\Categories;
 use Carbon\Carbon;
@@ -171,4 +172,40 @@ class CategoryController extends Controller
         return redirect('/categories');
 
     }
+
+    public function getAllCategory() {
+        $data = Categories::select('id', 'name')->whereNull('parentId') ->get();
+
+        if ( count($data) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list category",
+                "data"=>$data
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+
+    }
+    
+    public function getSubCategory() {
+
+        $data =  Categories::select('id', 'name', 'parentId')->whereNotNull('parentId') ->get();
+
+        if ( count($data) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list category",
+                "data"=>$data
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+    
+    }
+
 }

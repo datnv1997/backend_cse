@@ -32,7 +32,7 @@
     <div class="login-box">
         <div class="login-logo">
             <a href="/">
-                <img src="@if(isset($appSettings['institute_settings']['logo'])) {{asset('storage/logo/'.$appSettings['institute_settings']['logo'])}} @else {{ asset('images/logo-lg.png') }} @endif" alt="">
+                <img style="height:80px" src="{{asset('/images/logo.jpg')}}" alt="">
             </a>
         </div>
         <div class="login-box-body">

@@ -181,4 +181,55 @@ class EventController extends Controller
         $event->delete();
         return redirect()->route('event.index')->with('success', 'Event deleted.');
     }
+
+    public function getAllEvent() {
+        $event = Event::select('id', 'event_time', 'title', 'slug', 'cover_photo', 'description', 'created_at')->get();
+
+        if ( count($event) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list category",
+                "data"=>$event
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+    }
+    
+    public function detailEvent($id) {
+        $event = Event::all()->where('id', $id);
+
+        if ( count($event) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list category",
+                "data"=>$event
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+    }
+
+
+    public function listTopEvent()
+    {
+        $event = Event::select('id', 'event_time', 'title', 'slug', 'cover_photo', 'description', 'created_at')->orderBy('created_at', 'DESC')->take(3)->get();
+
+        if ( count($event) > 0){
+            return response()->json([
+                "code"=>"200",
+                "message"=>"list category",
+                "data"=>$event
+            ],200);
+        }
+
+        return response()->json([
+            "message"=>"data is null"
+        ],400);
+
+    }
 }

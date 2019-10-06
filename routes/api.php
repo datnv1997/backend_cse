@@ -16,3 +16,18 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+ //category 
+Route::get('/listCategory', 'CategoryController@getAllCategory');
+Route::get('/listSubCategory', 'CategoryController@getSubCategory');
+
+//Article
+Route::get('/listArticle/{id}', 'ArticleController@getArticle');
+Route::get('/detailArticle/{id}', 'ArticleController@getDetailArticle');
+
+//event
+Route::get('/listEvent', 'Backend\EventController@getAllEvent');
+Route::get('/detailEvent/{id}', 'Backend\EventController@detailEvent');
+Route::get('/topEvent', 'Backend\EventController@listTopEvent');
+
+

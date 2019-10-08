@@ -54,7 +54,8 @@ Route::get('/addArticles', 'ArticleController@add')->name('user.addArticle');
 Route::post('/addArticleController', 'ArticleController@create')->name('user.addArticleController');
 Route::post('/delArticles/{id}', 'ArticleController@destroy');
 Route::post('/editArticles/{id}', 'ArticleController@edit');
-// Route::post('/updateCategoryController/{id}', 'CategoryController@update')->name('user.updateCategoryController');
+Route::post('/updateArticleController/{id}', 'ArticleController@update')->name('user.updateArticleController');
+
 // Route::get('/categories', 'CategoryController@index')->name('user.categories');
 
 // Route::get('/articles', function () {

@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-info">
-                <form novalidate id="entryForm" action="{{url('/addArticleController')}}" method="POST"
+                <form novalidate id="entryForm" action="{{url('/updateArticleController/'.$model->id)}}" method="POST"
                     enctype="multipart/form-data">
 
                     <div class="box-body">
@@ -49,9 +49,13 @@
                                 <div class="form-group has-feedback">
                                     <label for="sel1">Phân loại</label>
                                     <select class="form-control" name="sel">
-                                        <option value=''>-</option>
+
+                                        <option>-</option>
+                                        <option value="{{$objName}}" selected>{{$objName}}</option>
                                         @foreach($obj as $data)
+                                        @if($data->name!=$objName)
                                         <option value="{{$data->name}}">{{$data->name}}</option>
+                                        @endif
                                         @endforeach
                                     </select>
                                     <span class="text-danger">{{ $errors->first('description') }}</span>
@@ -101,9 +105,9 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="" class="btn btn-default">Cancel</a>
+                        <a href="/articles" class="btn btn-default">Cancel</a>
                         <button type="submit" class="btn btn-info pull-right"><i
-                                class="fa fa-refresh fa-plus-circle"></i> Add </button>
+                                class="fa fa-refresh fa-plus-circle"></i> Edit </button>
 
                     </div>
                 </form>

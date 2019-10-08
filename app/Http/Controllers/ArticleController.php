@@ -105,10 +105,11 @@ class ArticleController extends Controller
     public function edit($id)
     {
         //
-        $obj = Articles::all();
         $model = Articles::find($id);
+        $obj = Categories::where('id', $model->categoryIds)->get();
+        $objName = $obj[0]->name;
 
-        return view('backend.articles.edit', compact('model', 'obj'));
+        return view('backend.articles.edit', compact('model', 'objName', 'obj'));
     }
 
     /**
@@ -121,6 +122,43 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $name = $request->input('name');
+        $description = $request->input('description');
+        $subDescription = $request->input('subDescription');
+        $sel = $request->input('sel');
+        $categoryIds = '';
+        if ($sel == '') {
+            $sel = null;
+        }
+        if ($sel == null) {
+            $categoryIds = null;
+        }
+        if ($sel != null) {
+
+            $temp = Categories::where('name', $sel)->get();
+
+            $categoryIds = $temp[0]->id;
+
+        }
+        $pathImg = '';
+        if ($request->hasFile('photo')) {
+            $img = $request->photo;
+            $nameImg = $img->getClientOriginalName();
+            $pathImg = "\/images/" . $nameImg;
+            $img->move('images', $nameImg);
+        }
+
+        $model = Articles::find($id);
+        // $model->id = $uuid;
+        $model->name = $name;
+        $model->description = $description;
+        $model->subDescription = $subDescription;
+        $model->images = $pathImg;
+        $model->categoryIds = $categoryIds;
+        $model->createdDate = Carbon::now();
+
+        $model->save();
+        return redirect('/articles');
     }
 
     /**

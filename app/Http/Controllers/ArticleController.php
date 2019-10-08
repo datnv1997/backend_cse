@@ -211,4 +211,24 @@ class ArticleController extends Controller
             "message" => "data is null",
         ], 400);
     }
+
+    // lấy 3 bài viết mới nhất - bài viết đang xem.
+    public function getThreeAricleNew($idWatched) {
+
+        $data = Articles::select( '*' )->where('id','!=', $idWatched )->orderBy('createdDate', 'DESC')->take(3)->get();
+        
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list banner",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+
+
 }

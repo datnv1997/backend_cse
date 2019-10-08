@@ -24,6 +24,8 @@ Route::get('/listSubCategory', 'CategoryController@getSubCategory');
 //Article
 Route::get('/listArticle/{id}', 'ArticleController@getArticle');
 Route::get('/detailArticle/{id}', 'ArticleController@getDetailArticle');
+Route::get('/blogNew/{id}', 'ArticleController@getThreeBlogNew'); // lấy 3 blog mới nhất
+Route::get('/threeArticle/{id}', 'ArticleController@getThreeAricleNew'); // lấy 3 blog mới nhất
 
 //event
 Route::get('/listEvent', 'Backend\EventController@getAllEvent');

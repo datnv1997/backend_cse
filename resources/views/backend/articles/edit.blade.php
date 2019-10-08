@@ -38,7 +38,8 @@
                                 <div class="form-group has-feedback">
                                     <label for="name">Tên<span class="text-danger">*</span></label>
                                     <input autofocus type="text" class="form-control" name="name"
-                                        placeholder="Tên phân loại" value="" required minlength="2" maxlength="255">
+                                        value="{{$model->name}}" placeholder="Tên phân loại" value="" required
+                                        minlength="2" maxlength="255">
                                     <!-- <span class="fa fa-info form-control-feedback"></span> -->
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 </div>
@@ -64,7 +65,7 @@
                                 <div class="form-group has-feedback">
                                     <label for="name">Mô tả ngắn<span class="text-danger"></span></label>
                                     <textarea type="text" class="form-control" rows="5" name="subDescription"
-                                        placeholder="Mô tả ngắn phân loại"></textarea>
+                                        placeholder="Mô tả ngắn phân loại">{{$model->subDescription}}</textarea>
                                     <!-- <span class="fa fa-info form-control-feedback"></span> -->
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 </div>
@@ -90,7 +91,7 @@
                                 <div class="form-group">
                                     <label for="description">Mô tả</label>
                                     <textarea class="form-control" rows="5" id="description"
-                                        name="description"></textarea>
+                                        name="description">{{$model->description}}</textarea>
                                 </div>
 
                             </div>

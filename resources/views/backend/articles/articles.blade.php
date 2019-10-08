@@ -87,7 +87,7 @@
                                             </a>
                                         </div> -->
                                         <div class="btn-group">
-                                            <form method="POST" action="{{url('/editCategories/'.$data->id)}}">
+                                            <form method="POST" action="{{url('/editArticles/'.$data->id)}}">
                                                 @csrf
                                                 <button title="Edit" type="submit" class="btn btn-info btn-sm"><i
                                                         class="fa fa-edit"></i>
@@ -97,7 +97,7 @@
 
                                         <div class="btn-group">
                                             <form class="myAction" method="POST"
-                                                action="{{url('/delCategories/'.$data->id)}}">
+                                                action="{{url('/delArticles/'.$data->id)}}">
                                                 @csrf
                                                 <!-- <input name="_method" type="hidden" value="DELETE"> -->
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete">

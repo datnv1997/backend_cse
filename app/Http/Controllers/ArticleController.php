@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Articles;
 use App\Categories;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -32,9 +32,46 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $name = $request->input('name');
+        $description = $request->input('description');
+        $subDescription = $request->input('subDescription');
+        $sel = $request->input('sel');
+        $categoryIds = '';
+        if ($sel == '') {
+            $sel = null;
+        }
+        if ($sel == null) {
+            $categoryIds = null;
+        }
+        if ($sel != null) {
+
+            $temp = Categories::where('name', $sel)->get();
+
+            $categoryIds = $temp[0]->id;
+
+        }
+        $pathImg = '';
+        if ($request->hasFile('photo')) {
+            $img = $request->photo;
+            $nameImg = $img->getClientOriginalName();
+            $pathImg = "\/images/" . $nameImg;
+            $img->move('images', $nameImg);
+        }
+
+        $model = new Articles();
+        // $model->id = $uuid;
+        $model->name = $name;
+        $model->description = $description;
+        $model->subDescription = $subDescription;
+        $model->images = $pathImg;
+        $model->categoryIds = $categoryIds;
+        $model->createdDate = Carbon::now();
+
+        $model->save();
+        return redirect('/articles');
     }
 
     /**
@@ -68,6 +105,10 @@ class ArticleController extends Controller
     public function edit($id)
     {
         //
+        $obj = Articles::all();
+        $model = Articles::find($id);
+
+        return view('backend.articles.edit', compact('model', 'obj'));
     }
 
     /**
@@ -91,42 +132,47 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         //
+        Articles::destroy($id);
+        return redirect('/Articles');
+
     }
 
     // lấy dánh sách các bài viết
-    public function getArticle($id) {
+    public function getArticle($id)
+    {
 
-        $data = Articles::select('id', 'name', 'subDescription', 'images', 'categoryIds' )->where('categoryIds', $id) ->get();
+        $data = Articles::select('id', 'name', 'subDescription', 'images', 'categoryIds')->where('categoryIds', $id)->get();
 
-        if ( count($data) > 0){
+        if (count($data) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list article",
-                "data"=>$data
-            ],200);
+                "code" => "200",
+                "message" => "list article",
+                "data" => $data,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
-    } 
+            "message" => "data is null",
+        ], 400);
+    }
 
-    // lấy chi tiết bài viết 
-    public function getDetailArticle($id) {
+    // lấy chi tiết bài viết
+    public function getDetailArticle($id)
+    {
 
         $data = Articles::all()->where('id', $id);
 
-        if ( count($data) > 0){
+        if (count($data) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list detail article",
-                "data"=>$data
-            ],200);
+                "code" => "200",
+                "message" => "list detail article",
+                "data" => $data,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
+            "message" => "data is null",
+        ], 400);
 
     }
 

@@ -57,7 +57,7 @@ class ArticleController extends Controller
         if ($request->hasFile('photo')) {
             $img = $request->photo;
             $nameImg = $img->getClientOriginalName();
-            $pathImg = "\/images/" . $nameImg;
+            $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
         }
 
@@ -140,15 +140,19 @@ class ArticleController extends Controller
             $categoryIds = $temp[0]->id;
 
         }
+        $model = Articles::find($id);
         $pathImg = '';
         if ($request->hasFile('photo')) {
             $img = $request->photo;
             $nameImg = $img->getClientOriginalName();
-            $pathImg = "\/images/" . $nameImg;
+            $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
         }
+        else {
+            $pathImg=$model->images;
+        }
 
-        $model = Articles::find($id);
+        
         // $model->id = $uuid;
         $model->name = $name;
         $model->description = $description;
@@ -233,9 +237,10 @@ class ArticleController extends Controller
     }
 
     //lấy 3 blog mới nhất
-    public function getThreeBlogNew($id) {
-   
-       $data = Articles::select( '*' )->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(3)->get();
+    public function getThreeBlogNew($id)
+    {
+
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(3)->get();
 
         if (count($data) > 0) {
             return response()->json([
@@ -251,10 +256,11 @@ class ArticleController extends Controller
     }
 
     // lấy 3 bài viết mới nhất - bài viết đang xem.
-    public function getThreeAricleNew($idWatched) {
+    public function getThreeAricleNew($idWatched)
+    {
 
-        $data = Articles::select( '*' )->where('id','!=', $idWatched )->orderBy('createdDate', 'DESC')->take(3)->get();
-        
+        $data = Articles::select('*')->where('id', '!=', $idWatched)->orderBy('createdDate', 'DESC')->take(3)->get();
+
         if (count($data) > 0) {
             return response()->json([
                 "code" => "200",
@@ -267,6 +273,23 @@ class ArticleController extends Controller
             "message" => "data is null",
         ], 400);
     }
+    public function threeArticleHome()
+    {
+        $temp= Categories::where("name",'Blog')->get();
+      
+        $data = Articles::select('*')->where('categoryIds', $temp[0]->id)->orderBy('createdDate', 'DESC')->take(3)->get();
 
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list banner",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
 
 }

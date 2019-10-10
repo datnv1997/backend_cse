@@ -54,10 +54,13 @@ class CategoryController extends Controller
 
         }
         $pathImg = '';
+       
+
         if ($request->hasFile('photo')) {
+            
             $img = $request->photo;
             $nameImg = $img->getClientOriginalName();
-            $pathImg = "\/images/" . $nameImg;
+            $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
         }
 
@@ -105,7 +108,8 @@ class CategoryController extends Controller
     public function edit($id)
     {
         //
-        $obj = Categories::all();
+        $obj = Categories::whereNull('preLevel')->get();
+       
         $model = Categories::find($id);
 
         return view('backend.categories.edit', compact('model', 'obj'));
@@ -138,15 +142,21 @@ class CategoryController extends Controller
             $parentId = $temp[0]->id;
 
         }
+        $model = Categories::find($id);
+        // echo $model;
+        // die();
         $pathImg = '';
         if ($request->hasFile('photo')) {
             $img = $request->photo;
             $nameImg = $img->getClientOriginalName();
-            $pathImg = "\/images/" . $nameImg;
+            $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
+        }else {
+            $pathImg=$model->images;
+            // echo
         }
 
-        $model = Categories::find($id);
+        
         // $model->id = $uuid;
         $model->name = $name;
         $model->description = $description;
@@ -194,6 +204,24 @@ class CategoryController extends Controller
     {
 
         $data = Categories::select('id', 'name', 'parentId')->whereNotNull('parentId')->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+
+    }
+    public function showCategory($id)
+    {
+
+        $data = Categories::select('*')->where('id',$id)->get();
 
         if (count($data) > 0) {
             return response()->json([

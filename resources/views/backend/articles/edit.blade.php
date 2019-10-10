@@ -87,7 +87,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <img id="output" src="" width="100" height="100">
+                                <img id="output" src="{{$model->images}}" width="100" height="100">
                             </div>
                         </div>
                         <div class="row">

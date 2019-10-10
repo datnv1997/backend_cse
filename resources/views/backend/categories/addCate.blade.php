@@ -68,11 +68,14 @@
                                     <label for="photo">Photo<span class="text-danger">[min 150 X 150 size and max
                                             200kb]</span></label>
                                     <input type="file" class="form-control" accept=".jpeg, .jpg, .png" name="photo"
-                                        placeholder="Photo image">
+                                        placeholder="Photo image" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
 
                                     <span class="glyphicon glyphicon-open-file form-control-feedback"></span>
                                     <span class="text-danger">{{ $errors->first('photo') }}</span>
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                               <img id="output" width="200px" height="100px" >
                             </div>
                         </div>
                         <div class="row">

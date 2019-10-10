@@ -38,7 +38,7 @@
                                 <div class="form-group has-feedback">
                                     <label for="name">Tên<span class="text-danger">*</span></label>
                                     <input autofocus type="text" class="form-control" name="name"
-                                        placeholder="Tên phân loại" value="" required minlength="2" maxlength="255">
+                                        placeholder="Tên bài viết" value="" required minlength="2" maxlength="255">
                                     <!-- <span class="fa fa-info form-control-feedback"></span> -->
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group has-feedback">
                                     <label for="name">Mô tả ngắn<span class="text-danger"></span></label>
                                     <textarea type="text" class="form-control" rows="5" name="subDescription"
-                                        placeholder="Mô tả ngắn phân loại"></textarea>
+                                        placeholder="Mô tả ngắn bài viết"></textarea>
                                     <!-- <span class="fa fa-info form-control-feedback"></span> -->
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 </div>
@@ -100,7 +100,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="" class="btn btn-default">Cancel</a>
+                        <a href="/articles" class="btn btn-default">Cancel</a>
                         <button type="submit" class="btn btn-info pull-right"><i
                                 class="fa fa-refresh fa-plus-circle"></i> Add </button>
 

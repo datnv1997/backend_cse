@@ -52,11 +52,13 @@
                                     <label for="sel1">Cấp trước đó</label>
                                     <select class="form-control" name="sel">
 
-                                        <option value="{{$model->preLevel}}"></option>
                                         <option value=''>-</option>
+                                        <option value="{{$model->preLevel}}" selected>{{$model->preLevel}}</option>
 
                                         @foreach($obj as $data)
+                                        @if($data->name!=$model->preLevel)
                                         <option value="{{$data->name}}">{{$data->name}}</option>
+                                        @endif
                                         @endforeach
 
                                     </select>
@@ -73,11 +75,14 @@
                                     <label for="photo">Photo<span class="text-danger">[min 150 X 150 size and max
                                             200kb]</span></label>
                                     <input type="file" class="form-control" accept=".jpeg, .jpg, .png" name="photo"
-                                        placeholder="Photo image">
+                                        placeholder="Photo image" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
 
                                     <span class="glyphicon glyphicon-open-file form-control-feedback"></span>
                                     <span class="text-danger">{{ $errors->first('photo') }}</span>
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                                <img id="output" width="100px" height="100px" src="{{$model->images}}">
                             </div>
                         </div>
                         <div class="row">
@@ -95,9 +100,9 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="" class="btn btn-default">Cancel</a>
+                        <a href="/categories" class="btn btn-default">Cancel</a>
                         <button type="submit" class="btn btn-info pull-right"><i
-                                class="fa fa-refresh fa-plus-circle"></i> Add </button>
+                                class="fa fa-refresh fa-plus-circle"></i> Edit </button>
 
                     </div>
                 </form>

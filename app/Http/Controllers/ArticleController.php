@@ -147,12 +147,10 @@ class ArticleController extends Controller
             $nameImg = $img->getClientOriginalName();
             $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
-        }
-        else {
-            $pathImg=$model->images;
+        } else {
+            $pathImg = $model->images;
         }
 
-        
         // $model->id = $uuid;
         $model->name = $name;
         $model->description = $description;
@@ -183,7 +181,7 @@ class ArticleController extends Controller
     public function getArticle($id)
     {
 
-        $data = Articles::select('id', 'name', 'subDescription', 'images', 'categoryIds')->where('categoryIds', $id)->get();
+        $data = Articles::select('*')->where('categoryIds', $id)->get();
 
         if (count($data) > 0) {
             return response()->json([
@@ -202,7 +200,7 @@ class ArticleController extends Controller
     public function getDetailArticle($id)
     {
 
-        $data = Articles::all()->where('id', $id);
+        $data = Articles::where('id', $id)->get();
 
         if (count($data) > 0) {
             return response()->json([
@@ -256,10 +254,11 @@ class ArticleController extends Controller
     }
 
     // lấy 3 bài viết mới nhất - bài viết đang xem.
-    public function getThreeAricleNew($idWatched)
+    public function getThreeArticleNew($idWatched)
     {
+        $cate = Articles::find($idWatched);
 
-        $data = Articles::select('*')->where('id', '!=', $idWatched)->orderBy('createdDate', 'DESC')->take(3)->get();
+        $data = Articles::select('*')->where('id', '!=', $idWatched)->where('categoryIds', $cate->categoryIds)->orderBy('createdDate', 'DESC')->take(3)->get();
 
         if (count($data) > 0) {
             return response()->json([
@@ -275,8 +274,8 @@ class ArticleController extends Controller
     }
     public function threeArticleHome()
     {
-        $temp= Categories::where("name",'Blog')->get();
-      
+        $temp = Categories::where("name", 'Blog')->get();
+
         $data = Articles::select('*')->where('categoryIds', $temp[0]->id)->orderBy('createdDate', 'DESC')->take(3)->get();
 
         if (count($data) > 0) {

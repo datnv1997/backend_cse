@@ -54,10 +54,9 @@ class CategoryController extends Controller
 
         }
         $pathImg = '';
-       
 
         if ($request->hasFile('photo')) {
-            
+
             $img = $request->photo;
             $nameImg = $img->getClientOriginalName();
             $pathImg = "/images/" . $nameImg;
@@ -109,7 +108,7 @@ class CategoryController extends Controller
     {
         //
         $obj = Categories::whereNull('preLevel')->get();
-       
+
         $model = Categories::find($id);
 
         return view('backend.categories.edit', compact('model', 'obj'));
@@ -151,12 +150,11 @@ class CategoryController extends Controller
             $nameImg = $img->getClientOriginalName();
             $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
-        }else {
-            $pathImg=$model->images;
+        } else {
+            $pathImg = $model->images;
             // echo
         }
 
-        
         // $model->id = $uuid;
         $model->name = $name;
         $model->description = $description;
@@ -221,7 +219,7 @@ class CategoryController extends Controller
     public function showCategory($id)
     {
 
-        $data = Categories::select('*')->where('id',$id)->get();
+        $data = Categories::select('*')->where('id', $id)->get();
 
         if (count($data) > 0) {
             return response()->json([
@@ -236,5 +234,25 @@ class CategoryController extends Controller
         ], 400);
 
     }
+    public function getRelatedCategory($id)
+    {
+        $temp = Categories::find($id);
 
+        $data = Categories::select('*')->where('parentId', $temp->parentId)
+            ->where('id', '!=', $id)->take(5)->get();
+
+        echo $data;
+        die();
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
 }

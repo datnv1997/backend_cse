@@ -23,6 +23,9 @@ use App\Http\Helpers\AppHelper;
  */
 Route::group(
     ['namespace' => 'Backend', 'middleware' => ['guest']], function () {
+        Route::get('/hehe', function () {
+            return redirect('/login');
+        });
         Route::get('/login', 'UserController@login')->name('login');
         Route::post('/login', 'UserController@authenticate');
         Route::get('/forgot', 'UserController@forgot')->name('forgot');

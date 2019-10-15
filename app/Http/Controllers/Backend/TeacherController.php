@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Employee;
+use App\Http\Controllers\Controller;
 use App\Http\Helpers\AppHelper;
 use App\Section;
 use App\Subject;
@@ -10,8 +12,6 @@ use App\User;
 use App\UserRole;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Employee;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -32,7 +32,6 @@ class TeacherController extends Controller
 
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -45,7 +44,6 @@ class TeacherController extends Controller
         $religion = 1;
         return view('backend.teacher.add', compact('teacher', 'gender', 'religion'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -83,22 +81,20 @@ class TeacherController extends Controller
             ]
         );
 
-        if($request->hasFile('photo')) {
+        if ($request->hasFile('photo')) {
             $storagepath = $request->file('photo')->store('public/employee');
             $fileName = basename($storagepath);
             $data['photo'] = $fileName;
-        }
-        else{
-            $data['photo'] = $request->get('oldPhoto','');
+        } else {
+            $data['photo'] = $request->get('oldPhoto', '');
         }
 
-        if($request->hasFile('signature')) {
+        if ($request->hasFile('signature')) {
             $storagepath = $request->file('signature')->store('public/employee/signature');
             $fileName = basename($storagepath);
             $data['signature'] = $fileName;
-        }
-        else{
-            $data['signature'] = $request->get('oldSignature','');
+        } else {
+            $data['signature'] = $request->get('oldSignature', '');
         }
 
         $data['name'] = $request->get('name');
@@ -131,7 +127,7 @@ class TeacherController extends Controller
             UserRole::create(
                 [
                     'user_id' => $user->id,
-                    'role_id' => AppHelper::USER_TEACHER
+                    'role_id' => AppHelper::USER_TEACHER,
                 ]
             );
             $data['user_id'] = $user->id;
@@ -141,7 +137,7 @@ class TeacherController extends Controller
             DB::commit();
 
             //now notify the admins about this record
-            $msg = $data['name']." teacher added by ".auth()->user()->name;
+            $msg = $data['name'] . " teacher added by " . auth()->user()->name;
             $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
             // Notification end
 
@@ -151,20 +147,16 @@ class TeacherController extends Controller
 
             return redirect()->route('teacher.create')->with('success', 'Teacher added!');
 
-
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
-            $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+            $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
 //            return $message;
-            return redirect()->route('teacher.create')->with("error",$message);
+            return redirect()->route('teacher.create')->with("error", $message);
         }
 
         return redirect()->route('teacher.create');
 
-
     }
-
 
     /**
      * Display the specified resource.
@@ -176,41 +168,37 @@ class TeacherController extends Controller
     {
         // if print id card of this student then
         // Do here
-        if($request->query->get('print_idcard',0)) {
+        if ($request->query->get('print_idcard', 0)) {
 
             $templateId = AppHelper::getAppSettings('employee_idcard_template');
-            $templateConfig = Template::where('id', $templateId)->where('type',3)->where('role_id', AppHelper::USER_TEACHER)->first();
+            $templateConfig = Template::where('id', $templateId)->where('type', 3)->where('role_id', AppHelper::USER_TEACHER)->first();
 
-            if(!$templateConfig){
+            if (!$templateConfig) {
                 return redirect()->route('administrator.template.idcard.index')->with('error', 'Template not found!');
             }
 
             $templateConfig = json_decode($templateConfig->content);
 
             $format = "format_";
-            if($templateConfig->format_id == 2){
-                $format .="two";
-            }
-            else if($templateConfig->format_id == 3){
-                $format .="three";
-            }
-            else {
-                $format .="one";
+            if ($templateConfig->format_id == 2) {
+                $format .= "two";
+            } else if ($templateConfig->format_id == 3) {
+                $format .= "three";
+            } else {
+                $format .= "one";
             }
 
             //get institute information
             $instituteInfo = AppHelper::getAppSettings('institute_settings');
 
-
             $employees = Employee::where('id', $id)->get();
 
-            if(!$employees){
+            if (!$employees) {
                 abort(404);
             }
 
-
             $side = 'both';
-            return view('backend.report.hrm.employee.idcard.'.$format, compact(
+            return view('backend.report.hrm.employee.idcard.' . $format, compact(
                 'templateConfig',
                 'instituteInfo',
                 'side',
@@ -218,35 +206,30 @@ class TeacherController extends Controller
             ));
         }
 
-
-
         $teacher = Employee::with('user')->where('role_id', AppHelper::EMP_TEACHER)->where('id', $id)->first();
-        if(!$teacher){
+        if (!$teacher) {
             abort(404);
         }
 
-        $sections = Section::with(['class' => function($query){
-                    $query->select('name','id');
-            }])
+        $sections = Section::with(['class' => function ($query) {
+            $query->select('name', 'id');
+        }])
             ->where('teacher_id', $teacher->id)
-            ->select('name','class_id')
-            ->orderBy('name','asc')
+            ->select('name', 'class_id')
+            ->orderBy('name', 'asc')
             ->get();
 
-        $subjects = Subject::with(['class' => function($query){
-            $query->select('name','id');
-            }])
+        $subjects = Subject::with(['class' => function ($query) {
+            $query->select('name', 'id');
+        }])
             ->where('teacher_id', $teacher->id)
-            ->select('name','class_id','code')
-            ->orderBy('name','asc')
+            ->select('name', 'class_id', 'code')
+            ->orderBy('name', 'asc')
             ->get();
 
-
-        return view('backend.teacher.view', compact('teacher','sections', 'subjects'));
-
+        return view('backend.teacher.view', compact('teacher', 'sections', 'subjects'));
 
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -258,17 +241,17 @@ class TeacherController extends Controller
     {
         $teacher = Employee::where('role_id', AppHelper::EMP_TEACHER)->where('id', $id)->first();
 
-        if(!$teacher){
+        if (!$teacher) {
             abort(404);
         }
         $gender = $teacher->getOriginal('gender');
         $religion = $teacher->getOriginal('religion');
 
         $users = [];
-        if(!$teacher->user_id){
+        if (!$teacher->user_id) {
             $users = User::doesnthave('employee')
                 ->doesnthave('student')
-                ->whereHas('role' , function ($query) {
+                ->whereHas('role', function ($query) {
                     $query->where('role_id', AppHelper::USER_TEACHER);
                 })
                 ->pluck('name', 'id');
@@ -277,7 +260,6 @@ class TeacherController extends Controller
         return view('backend.teacher.add', compact('teacher', 'gender', 'religion', 'users'));
 
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -288,9 +270,9 @@ class TeacherController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $teacher = Employee::where('role_id', AppHelper::EMP_TEACHER)->where('id', $id)->first();
+        $teacher = Employee::where('role_id', AppHelper::EMP_TEACHER)->where('id', $id)->first();
 
-        if(!$teacher){
+        if (!$teacher) {
             abort(404);
         }
         //validate form
@@ -310,48 +292,45 @@ class TeacherController extends Controller
                 'dob' => 'min:10',
                 'gender' => 'required|integer',
                 'religion' => 'required|integer',
-                'email' => 'email|max:255|unique:employees,email,'.$teacher->id.'|unique:users,email,'.$teacher->user_id,
+                'email' => 'email|max:255|unique:employees,email,' . $teacher->id . '|unique:users,email,' . $teacher->user_id,
                 'phone_no' => 'required|min:8|max:255',
                 'address' => 'max:500',
-                'id_card' => 'required|min:4|max:50|unique:employees,id_card,'.$teacher->id,
+                'id_card' => 'required|min:4|max:50|unique:employees,id_card,' . $teacher->id,
                 'joining_date' => 'min:10',
                 'user_id' => 'nullable|integer',
 
             ]
         );
 
-        if($request->hasFile('photo')) {
+        if ($request->hasFile('photo')) {
             $storagepath = $request->file('photo')->store('public/employee');
             $fileName = basename($storagepath);
             $data['photo'] = $fileName;
 
             //if file change then delete old one
-            $oldFile = $request->get('oldPhoto','');
-            if( $oldFile != ''){
-                $file_path = "public/employee/".$oldFile;
+            $oldFile = $request->get('oldPhoto', '');
+            if ($oldFile != '') {
+                $file_path = "public/employee/" . $oldFile;
                 Storage::delete($file_path);
             }
-        }
-        else{
-            $data['photo'] = $request->get('oldPhoto','');
+        } else {
+            $data['photo'] = $request->get('oldPhoto', '');
         }
 
-        if($request->hasFile('signature')) {
+        if ($request->hasFile('signature')) {
             $storagepath = $request->file('signature')->store('public/employee/signature');
             $fileName = basename($storagepath);
             $data['signature'] = $fileName;
 
             //if file change then delete old one
-            $oldFile = $request->get('oldSignature','');
-            if( $oldFile != ''){
-                $file_path = "public/employee/signature/".$oldFile;
+            $oldFile = $request->get('oldSignature', '');
+            if ($oldFile != '') {
+                $file_path = "public/employee/signature/" . $oldFile;
                 Storage::delete($file_path);
             }
+        } else {
+            $data['signature'] = $request->get('oldSignature', '');
         }
-        else{
-            $data['signature'] = $request->get('oldSignature','');
-        }
-
 
         $data['name'] = $request->get('name');
         $data['designation'] = $request->get('designation');
@@ -366,12 +345,12 @@ class TeacherController extends Controller
         $data['id_card'] = $request->get('id_card');
 
         //
-        if(!$teacher->user_id && $request->get('user_id', 0)){
+        if (!$teacher->user_id && $request->get('user_id', 0)) {
             $data['user_id'] = $request->get('user_id');
         }
 
         $teacher->fill($data);
-        if($teacher->isDirty('email') || $teacher->isDirty('phone_no')){
+        if ($teacher->isDirty('email') || $teacher->isDirty('phone_no')) {
             $user = $teacher->user()->first();
             $user->email = $data['email'];
             $user->phone_no = $data['phone_no'];
@@ -381,9 +360,7 @@ class TeacherController extends Controller
 
         return redirect()->route('teacher.index')->with('success', 'Teacher updated!');
 
-
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -395,18 +372,17 @@ class TeacherController extends Controller
     {
         $teacher = Employee::where('role_id', AppHelper::EMP_TEACHER)->where('id', $id)->first();
 
-        if(!$teacher){
+        if (!$teacher) {
             abort(404);
         }
         //protect from delete the teacher if have any class or section connected with this teacher
         $haveSection = Section::where('teacher_id', $teacher->id)->count();
         $haveSubject = Subject::where('teacher_id', $teacher->id)->count();
 
-        if($haveSection || $haveSubject){
+        if ($haveSection || $haveSubject) {
             return redirect()->route('teacher.index')->with('error', 'Can not delete! Teacher used in section or subject.');
 
         }
-
 
         $message = "Something went wrong!";
         DB::beginTransaction();
@@ -415,14 +391,14 @@ class TeacherController extends Controller
             User::destroy($teacher->user_id);
             DB::table('user_roles')->where('user_id', $teacher->user_id)->update([
                 'deleted_by' => auth()->user()->id,
-                'deleted_at' => Carbon::now()
+                'deleted_at' => Carbon::now(),
             ]);
             $teacher->delete();
 
             DB::commit();
 
             //now notify the admins about this record
-            $msg = $teacher->name." teacher deleted by ".auth()->user()->name;
+            $msg = $teacher->name . " teacher deleted by " . auth()->user()->name;
             $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
             // Notification end
 
@@ -432,14 +408,10 @@ class TeacherController extends Controller
 
             return redirect()->route('teacher.index')->with('success', 'Teacher deleted.');
 
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
-            $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+            $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
         }
-
-
-
 
         return redirect()->route('teacher.index')->with('error', $message);
 
@@ -449,24 +421,24 @@ class TeacherController extends Controller
      * status change
      * @return mixed
      */
-    public function changeStatus(Request $request, $id=0)
+    public function changeStatus(Request $request, $id = 0)
     {
 
-        $employee =  Employee::findOrFail($id);
-        if(!$employee){
+        $employee = Employee::findOrFail($id);
+        if (!$employee) {
             return [
                 'success' => false,
-                'message' => 'Record not found!'
+                'message' => 'Record not found!',
             ];
         }
 
-        $employee->status = (string)$request->get('status');
+        $employee->status = (string) $request->get('status');
 
         $employee->save();
 
         return [
             'success' => true,
-            'message' => 'Status updated.'
+            'message' => 'Status updated.',
         ];
 
     }

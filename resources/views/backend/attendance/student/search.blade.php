@@ -34,7 +34,7 @@
 
                                 <select class="form-control" id="sel1" name="sel1">
 
-                                    <option>Select list:</option>
+                                    <option>Chọn lớp học phần:</option>
                                     @foreach($iClass as $data )
                                     <option value="{{$data->id}}">{{$data->name}}</option>
                                     @endforeach
@@ -62,8 +62,11 @@
                         </div>
                         <div class="box-tools pull-right">
 
-                            <a class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i> Điểm
+                            <a class="btn btn-info btn-sm" href="/student-attendance/create"><i
+                                    class="fa fa-plus-circle"></i> Điểm
                                 Danh</a>
+                            <!-- <button class="btn btn-info btn-sm" type="submit"><i class="fa fa-search"></i> Điểm Danh</button> -->
+
                         </div>
                 </div>
                 <!-- /.box-header -->
@@ -85,18 +88,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($student as $key=>$data)
-                                <tr>
-                                    <td>{{$key}}</td>
-                                    <td>{{$data->student_id}}</td>
-                                    <td>{{$data->name}}</td>
-                                    <td>{{$data->attendance_date}}</td>
-                                    <td>{{$data->in_time}}</td>
-                                    <td>{{$data->out_time}}</td>
-                                    <td>{{$data->staying_hour}}</td>
-                                    <td>{{$data->present}}</td>
-                                </tr>
-                                @endforeach
+
                             </tbody>
 
                         </table>
@@ -116,6 +108,7 @@
 @section('extraScript')
 <script type="text/javascript">
 $(document).ready(function() {
+    // $('#attendance_list_filter').datepicker();
     window.postUrl = '{{URL::Route("student_attendance.status", 0)}}';
     window.section_list_url = '{{URL::Route("academic.section")}}';
     window.changeExportColumnIndex = 4;

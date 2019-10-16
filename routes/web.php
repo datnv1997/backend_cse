@@ -70,7 +70,7 @@ Route::get('/public/exam', 'Backend\ExamController@indexPublic')->name('public.e
 Route::any('/online-result', 'Backend\ReportController@marksheetPublic')->name('report.marksheet_pub');
 
 Route::group(
-    ['namespace' => 'Backend', 'middleware' => ['auth', 'permission']], function () {
+    ['namespace' => 'Backend', 'middleware' => ['auth']], function () { //'permission'
         Route::get('/logout', 'UserController@logout')->name('logout');
         Route::get('/lock', 'UserController@lock')->name('lockscreen');
         Route::get('/dashboard', 'UserController@dashboard')->name('user.dashboard');
@@ -281,10 +281,12 @@ Route::group(
         Route::post('student-attendance/store', 'StudentAttendanceController@store')->name('student_attendance.store');
         Route::post('student-attendance/status/{id}', 'StudentAttendanceController@changeStatus')
             ->name('student_attendance.status');
-        Route::any('student-attendance/file-upload', 'StudentAttendanceController@createFromFile')
-            ->name('student_attendance.create_file');
-        Route::get('student-attendance/file-queue-status', 'StudentAttendanceController@fileQueueStatus')
-            ->name('student_attendance.file_queue_status');
+        Route::post('student-attendance/search', 'StudentAttendanceController@seachAttendance')->name('student_attendance.search');
+        Route::get('student-attendance/search/{class}/{date}', 'StudentAttendanceController@seachParamAttendance')->name('student_attendance.seachParam');
+        // Route::any('student-attendance/file-upload', 'StudentAttendanceController@createFromFile')
+        //     ->name('student_attendance.create_file');
+        // Route::get('student-attendance/file-queue-status', 'StudentAttendanceController@fileQueueStatus')
+        //     ->name('student_attendance.file_queue_status');
 
         // HRM
         //Employee

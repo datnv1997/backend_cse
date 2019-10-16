@@ -12,6 +12,7 @@ use App\Registration;
 use App\Section;
 use App\StudentAttendance;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -25,97 +26,47 @@ class StudentAttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function seachAttendance(Request $request)
     {
+        $date = $request->input('attendance_date');
+        $splitDate = explode('/', $date, 3);
+        $collection = collect($splitDate);
+        $joinDate = $collection->implode('-');
 
-        //if student id present  that means come from student profile
-        // show fetch the attendance and send json response
-        if ($request->ajax() && $request->query->get('student_id', 0)) {
-            $id = $request->query->get('student_id', 0);
-            $attendances = StudentAttendance::where('registration_id', $id)
-                ->select('attendance_date', 'present', 'registration_id')
-                ->orderBy('attendance_date', 'asc')
-                ->get();
-            return response()->json($attendances);
-
-        }
-
-        // get query parameter for filter the fetch
-        $class_id = $request->query->get('class', 0);
-        $section_id = $request->query->get('section', 0);
-        $acYear = $request->query->get('academic_year', 0);
-        $attendance_date = $request->query->get('attendance_date', date('d/m/Y'));
-        //if its college then have to get those academic years
-        $academic_years = [];
-        if (AppHelper::getInstituteCategory() == 'college') {
-            $academic_years = AcademicYear::where('status', '1')->orderBy('id', 'desc')->pluck('title', 'id');
-        } else {
-
-            $acYear = $request->query->get('academic_year', AppHelper::getAcademicYear());
-        }
-
-        //if its a ajax request that means come from attendance add exists checker
-        if ($request->ajax()) {
-            $attendances = $this->getAttendanceByFilters($class_id, $section_id, $acYear, $attendance_date, true);
-            return response()->json($attendances);
-        }
-
-        $classes = IClass::where('status', AppHelper::ACTIVE)
-            ->orderBy('order', 'asc')
-            ->pluck('name', 'id');
-        $sections = [];
-
-        //now fetch attendance data
-        $attendances = [];
-        if ($class_id && $section_id && $acYear && strlen($attendance_date) >= 10) {
-            $att_date = Carbon::createFromFormat('d/m/Y', $attendance_date)->toDateString();
-            $attendances = Registration::where('academic_year_id', $acYear)
-                ->where('class_id', $class_id)
-                ->where('section_id', $section_id)
-                ->where('status', AppHelper::ACTIVE)
-                ->with(['student' => function ($query) {
-                    $query->select('name', 'id');
-                }])
-                ->with(['attendanceSingleDay' => function ($query) use ($att_date, $class_id, $acYear) {
-                    $query->select('id', 'present', 'registration_id', 'in_time', 'out_time', 'staying_hour')
-                        ->where('academic_year_id', $acYear)
-                        ->where('class_id', $class_id)
-                        ->whereDate('attendance_date', $att_date);
-                }])
-                ->whereHas('attendance', function ($query) use ($att_date, $class_id, $acYear) {
-                    $query->select('id', 'registration_id')
-                        ->where('academic_year_id', $acYear)
-                        ->where('class_id', $class_id)
-                        ->whereDate('attendance_date', $att_date);
-                })
-                ->select('id', 'regi_no', 'roll_no', 'student_id')
-                ->orderBy('roll_no', 'asc')
-                ->get();
-
-            $sections = Section::where('status', AppHelper::ACTIVE)
-                ->where('class_id', $class_id)
-                ->pluck('name', 'id');
-        }
-
+        $class = $request->input('sel1');
+        return redirect('/student-attendance/search/' . $class . '/' . $joinDate);
+    }
+    public function seachParamAttendance($class, $date)
+    {
+        // echo $date;
+        $newformat = new DateTime($date);
+        $formatDate = $newformat->format('Y-m-d');
+        $student = StudentAttendance::where('class_id', $class)->where('attendance_date', $formatDate)->get();
+        // echo $student;
+        $iClass = IClass::all();
         return view('backend.attendance.student.list', compact(
-            'academic_years',
-            'classes',
-            'sections',
-            'acYear',
-            'class_id',
-            'section_id',
-            'attendance_date',
-            'attendances'
+            'student',
+            'iClass',
+            'formatDate'
+        ));
+
+    }
+    public function index()
+    {
+        $iClass = iClass::all();
+        $dateNow = Carbon::now();
+        $formatDate = $dateNow->format('d-m-y');
+        return view('backend.attendance.student.search', compact(
+            'iClass', 'formatDate'
         ));
 
     }
 
-    private function getAttendanceByFilters($class_id, $section_id, $acYear, $attendance_date, $isCount = false)
+    private function getAttendanceByFilters($class_id, $acYear, $attendance_date, $isCount = false)
     {
         $att_date = Carbon::createFromFormat('d/m/Y', $attendance_date)->toDateString();
         return $attendances = Registration::where('academic_year_id', $acYear)
             ->where('class_id', $class_id)
-            ->where('section_id', $section_id)
             ->where('status', AppHelper::ACTIVE)
             ->with(['student' => function ($query) {
                 $query->select('name', 'id');

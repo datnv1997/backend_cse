@@ -127,6 +127,7 @@ class EventController extends Controller
             if ($event->cover_photo) {
                 $img = $request->cover_photo;
                 $nameImg = $img->getClientOriginalName();
+                $img->move('images', $nameImg);
                 $file_path = "/images/" . $nameImg;
                 // dd($file_path);
                 Storage::delete($file_path);
@@ -134,6 +135,7 @@ class EventController extends Controller
             }
             $storagepath = $request->file('cover_photo');
             $nameImg = $storagepath->getClientOriginalName();
+            // $storagepath->move('images', $nameImg);
             $file_path = "/images/" . $nameImg;
             // $fileName = basename($storagepath);
             // dd($fileName);
@@ -192,7 +194,7 @@ class EventController extends Controller
 
     public function listTopEvent()
     {
-        $event = Event::select('id', 'event_time', 'title', 'slug', 'cover_photo', 'description', 'created_at')->orderBy('created_at', 'DESC')->take(3)->get();
+        $event = Event::select('*')->orderBy('created_at', 'DESC')->take(3)->get();
 
         if (count($event) > 0) {
             return response()->json([

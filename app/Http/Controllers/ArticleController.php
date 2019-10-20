@@ -60,7 +60,6 @@ class ArticleController extends Controller
             $pathImg = "/images/" . $nameImg;
             $img->move('images', $nameImg);
         }
-
         $model = new Articles();
         // $model->id = $uuid;
         $model->name = $name;
@@ -181,7 +180,7 @@ class ArticleController extends Controller
     public function getArticle($id)
     {
 
-        $data = Articles::select('*')->where('categoryIds', $id)->get();
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->get();
 
         if (count($data) > 0) {
             return response()->json([
@@ -290,5 +289,38 @@ class ArticleController extends Controller
             "message" => "data is null",
         ], 400);
     }
+    public function getArticleTuyenDungHome()
+    {
+        $id = 31;
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(1)->get();
 
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list banner",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function getArticleBanner()
+    {
+        $id = 32;
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(3)->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list banner",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
 }

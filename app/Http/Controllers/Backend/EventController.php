@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Event;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use App\Event;
 
 class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::paginate(env('MAX_RECORD_PER_PAGE',25));
+        $events = Event::paginate(env('MAX_RECORD_PER_PAGE', 25));
         return view('backend.site.event.list', compact('events'));
     }
 
@@ -32,7 +32,7 @@ class EventController extends Controller
             'slider_2.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
             'slider_3.max' => 'The :attribute size must be under 2MB.',
             'slider_3.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'cover_photo.max' => 'The :attribute size must be under 2MB.',
+            'cover_photo.max' => 'Nhập ảnh quá tối đa 2MB.',
             'cover_photo.dimensions' => 'The :attribute dimensions must be minimum 370 X 270.',
         ];
         $this->validate($request, [
@@ -43,37 +43,35 @@ class EventController extends Controller
             'slider_2' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
             'slider_3' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
             'description' => 'required',
-            'tags' => 'max:255',
-            'cover_videos' => 'max:255'
+            // 'tags' => 'max:255',
+            'cover_videos' => 'max:255',
         ], $messages);
 
-
         $data = $request->all();
-        $datetime = Carbon::createFromFormat('d/m/Y h:i a',$data['event_time']);
+        $datetime = Carbon::createFromFormat('d/m/Y h:i a', $data['event_time']);
         $data['event_time'] = $datetime;
-        $data['slug'] = strtolower(str_replace(' ','-', $data['title']));
 
         $fileName = null;
-        if($request->hasFile('cover_photo')) {
+        if ($request->hasFile('cover_photo')) {
             $storagepath = $request->file('cover_photo')->store('public/events');
             $fileName = basename($storagepath);
             $data['cover_photo'] = $fileName;
 
         }
         $fileName = null;
-        if($request->hasFile('slider_1')) {
+        if ($request->hasFile('slider_1')) {
             $storagepath = $request->file('slider_1')->store('public/events');
             $fileName = basename($storagepath);
             $data['slider_1'] = $fileName;
 
         }
-        if($request->hasFile('slider_2')) {
+        if ($request->hasFile('slider_2')) {
             $storagepath = $request->file('slider_2')->store('public/events');
             $fileName = basename($storagepath);
             $data['slider_2'] = $fileName;
 
         }
-        if($request->hasFile('slider_3')) {
+        if ($request->hasFile('slider_3')) {
             $storagepath = $request->file('slider_3')->store('public/events');
             $fileName = basename($storagepath);
             $data['slider_3'] = $fileName;
@@ -113,64 +111,40 @@ class EventController extends Controller
             'slider_2' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
             'slider_3' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
             'description' => 'required',
-            'tags' => 'max:255',
-            'cover_videos' => 'max:255'
+            // 'tags' => 'max:255',
+            'cover_videos' => 'max:255',
         ], $messages);
 
-
         $data = $request->all();
-        $datetime = Carbon::createFromFormat('d/m/Y h:i a',$data['event_time']);
+        $datetime = Carbon::createFromFormat('d/m/Y h:i a', $data['event_time']);
         $data['event_time'] = $datetime;
-        $data['slug'] = strtolower(str_replace(' ','-', $data['title']));
+        $data['location'] = $request->input('location');
         $event = Event::findOrFail($id);
 
         $fileName = null;
-        if($request->hasFile('cover_photo')) {
+        if ($request->hasFile('cover_photo')) {
 
-            if($event->cover_photo){
-                $file_path = "public/events/".$event->cover_photo;
+            if ($event->cover_photo) {
+                $img = $request->cover_photo;
+                $nameImg = $img->getClientOriginalName();
+                $file_path = "/images/" . $nameImg;
+                // dd($file_path);
                 Storage::delete($file_path);
+                $data['cover_photo'] = $file_path;
             }
-            $storagepath = $request->file('cover_photo')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['cover_photo'] = $fileName;
+            $storagepath = $request->file('cover_photo');
+            $nameImg = $storagepath->getClientOriginalName();
+            $file_path = "/images/" . $nameImg;
+            // $fileName = basename($storagepath);
+            // dd($fileName);
+            $data['cover_photo'] = $file_path;
 
         }
         $fileName = null;
-        if($request->hasFile('slider_1')) {
-            if($event->slider_1){
-                $file_path = "public/events/".$event->slider_1;
-                Storage::delete($file_path);
-            }
-            $storagepath = $request->file('slider_1')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['slider_1'] = $fileName;
-
-        }
-        if($request->hasFile('slider_2')) {
-            if($event->slider_2){
-                $file_path = "public/events/".$event->slider_2;
-                Storage::delete($file_path);
-            }
-            $storagepath = $request->file('slider_2')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['slider_2'] = $fileName;
-
-        }
-        if($request->hasFile('slider_3')) {
-            if($event->slider_3){
-                $file_path = "public/events/".$event->slider_3;
-                Storage::delete($file_path);
-            }
-            $storagepath = $request->file('slider_3')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['slider_3'] = $fileName;
-
-        }
+        // dd($data);
 
         $event->fill($data);
         $event->save();
-        Cache::forget('upcomming_event');
 
         return redirect()->route('event.index')->with('success', 'Event information updated.');
     }
@@ -182,54 +156,55 @@ class EventController extends Controller
         return redirect()->route('event.index')->with('success', 'Event deleted.');
     }
 
-    public function getAllEvent() {
+    public function getAllEvent()
+    {
         $event = Event::select('id', 'event_time', 'title', 'slug', 'cover_photo', 'description', 'created_at')->get();
 
-        if ( count($event) > 0){
+        if (count($event) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list category",
-                "data"=>$event
-            ],200);
+                "code" => "200",
+                "message" => "list category",
+                "data" => $event,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
+            "message" => "data is null",
+        ], 400);
     }
-    
-    public function detailEvent($id) {
+
+    public function detailEvent($id)
+    {
         $event = Event::all()->where('id', $id);
 
-        if ( count($event) > 0){
+        if (count($event) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list category",
-                "data"=>$event
-            ],200);
+                "code" => "200",
+                "message" => "list category",
+                "data" => $event,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
+            "message" => "data is null",
+        ], 400);
     }
-
 
     public function listTopEvent()
     {
         $event = Event::select('id', 'event_time', 'title', 'slug', 'cover_photo', 'description', 'created_at')->orderBy('created_at', 'DESC')->take(3)->get();
 
-        if ( count($event) > 0){
+        if (count($event) > 0) {
             return response()->json([
-                "code"=>"200",
-                "message"=>"list category",
-                "data"=>$event
-            ],200);
+                "code" => "200",
+                "message" => "list category",
+                "data" => $event,
+            ], 200);
         }
 
         return response()->json([
-            "message"=>"data is null"
-        ],400);
+            "message" => "data is null",
+        ], 400);
 
     }
 }

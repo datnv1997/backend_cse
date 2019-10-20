@@ -62,7 +62,7 @@
                         </div>
                         <div class="box-tools pull-right">
 
-                            <a class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i> Điểm
+                            <a class="btn btn-info btn-sm" href="/student-attendance/create"><i class="fa fa-plus-circle"></i> Điểm
                                 Danh</a>
                         </div>
                 </div>
@@ -119,7 +119,7 @@ $(document).ready(function() {
     window.postUrl = '{{URL::Route("student_attendance.status", 0)}}';
     window.section_list_url = '{{URL::Route("academic.section")}}';
     window.changeExportColumnIndex = 4;
-    window.changeExportColumnValue = ['Present', 'Absent'];
+    window.changeExportColumnValue = ['Có', 'Vắng'];
     window.excludeFilterComlumns = [0, 4, 5, 6, 7];
     Academic.attendanceInit();
     $('title').text($('title').text() + '-' + $('select[name="class_id"] option[selected]').text() + '(' + $(

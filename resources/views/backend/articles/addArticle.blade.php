@@ -71,8 +71,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group has-feedback">
-                                    <label for="photo">Photo<span class="text-danger">[min 150 X 150 size and max
-                                            200kb]</span></label>
+                                    <label for="photo">Photo<span class="text-danger"></span></label>
                                     <input type="file" class="form-control" accept=".jpeg, .jpg, .png" name="photo"
                                         placeholder="Photo image"
                                         onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">

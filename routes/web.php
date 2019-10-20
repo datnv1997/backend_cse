@@ -278,6 +278,9 @@ Route::group(
         // student attendance routes
         Route::get('student-attendance', 'StudentAttendanceController@index')->name('student_attendance.index');
         Route::any('student-attendance/create', 'StudentAttendanceController@create')->name('student_attendance.create');
+
+        Route::get('student-attendance/check/{classId}', 'StudentAttendanceController@checkStudent')->name('student_attendance.checkStudent');
+        Route::post('student-attendance/createDiemDanh', 'StudentAttendanceController@createDiemDanh')->name('student_attendance.createDiemDanh');
         Route::post('student-attendance/store', 'StudentAttendanceController@store')->name('student_attendance.store');
         Route::post('student-attendance/status/{id}', 'StudentAttendanceController@changeStatus')
             ->name('student_attendance.status');

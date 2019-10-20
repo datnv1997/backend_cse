@@ -239,10 +239,99 @@ class CategoryController extends Controller
         $temp = Categories::find($id);
 
         $data = Categories::select('*')->where('parentId', $temp->parentId)
-            ->where('id', '!=', $id)->take(5)->get();
+            ->where('id', '!=', $id)->get();
 
-        echo $data;
-        die();
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+
+    public function news()
+    {
+        $id = 6;
+
+        $data = Categories::select('*')->where('parentId', $id)->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function daoTao()
+    {
+        $id = 1;
+
+        $data = Categories::select('*')->where('parentId', $id)->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function nghienCuu()
+    {
+        $id = 3;
+
+        $data = Categories::select('*')->where('parentId', $id)->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function trungTam()
+    {
+        $id = 4;
+
+        $data = Categories::select('*')->where('parentId', $id)->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list category",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function sinhVien()
+    {
+        $id = 5;
+
+        $data = Categories::select('*')->where('parentId', $id)->get();
+
         if (count($data) > 0) {
             return response()->json([
                 "code" => "200",

@@ -9,7 +9,6 @@ use App\Http\Helpers\AppHelper;
 use App\IClass;
 use App\Jobs\PushStudentAbsentJob;
 use App\Registration;
-use App\Section;
 use App\StudentAttendance;
 use Carbon\Carbon;
 use DateTime;
@@ -21,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentAttendanceController extends Controller
 {
+    public $classId = '';
     /**
      * Display a listing of the resource.
      *
@@ -61,7 +61,33 @@ class StudentAttendanceController extends Controller
         ));
 
     }
+    public function checkStudent($class_id)
+    {
+        $this->classId = $class_id;
+        // echo $this->classId;
+        $students = StudentAttendance::all()->where('class_id', $class_id);
+        $class = IClass::all();
+        return view('backend.attendance.student.checkStudent', compact('students', "class"));
+    }
+    public function createDiemDanh(Request $request)
+    {
+        // $temp = basename($_SERVER['REQUEST_URI']);
+        $present = $request->get('present', []);
 
+        $idAttendance = array_keys($present);
+
+        $dateTimeNow = Carbon::now()->format('Y-m-d');
+        echo $this->classId;
+
+        // $model = new StudentAttendance();
+        // $model->student_id = "";
+        // $model->class_id = "";
+        // $model->attendance_date = "";
+        // $model->present = "";
+        // $model->save();
+        // echo $dateTimeNow;
+
+    }
     private function getAttendanceByFilters($class_id, $acYear, $attendance_date, $isCount = false)
     {
         $att_date = Carbon::createFromFormat('d/m/Y', $attendance_date)->toDateString();
@@ -109,10 +135,10 @@ class StudentAttendanceController extends Controller
                 $acYear = AppHelper::getAcademicYear();
             }
             $class_id = $request->get('class_id', 0);
-            $section_id = $request->get('section_id', 0);
+            // $section_id = $request->get('section_id', 0);
             $attendance_date = $request->get('attendance_date', '');
 
-            $attendances = $this->getAttendanceByFilters($class_id, $section_id, $acYear, $attendance_date, true);
+            $attendances = $this->getAttendanceByFilters($class_id, $acYear, $attendance_date, true);
             if ($attendances) {
                 return redirect()->route('student_attendance.create')->with("error", "Attendance already exists!");
             }
@@ -121,7 +147,6 @@ class StudentAttendanceController extends Controller
                 $query->select('name', 'id');
             }])->where('academic_year_id', $acYear)
                 ->where('class_id', $class_id)
-                ->where('section_id', $section_id)
                 ->select('regi_no', 'roll_no', 'id', 'student_id')
                 ->orderBy('roll_no', 'asc')
                 ->get();
@@ -130,11 +155,6 @@ class StudentAttendanceController extends Controller
                 ->where('id', $class_id)
                 ->first();
             $class_name = $classInfo->name;
-            $sectionsInfo = Section::where('status', AppHelper::ACTIVE)
-                ->where('id', $section_id)
-                ->where('class_id', $class_id)
-                ->first();
-            $section_name = $sectionsInfo->name;
 
             if (AppHelper::getInstituteCategory() == 'college') {
                 $acYearInfo = AcademicYear::where('status', '1')->where('id', $acYear)->first();

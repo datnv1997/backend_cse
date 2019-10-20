@@ -112,7 +112,7 @@ $(document).ready(function() {
     window.postUrl = '{{URL::Route("student_attendance.status", 0)}}';
     window.section_list_url = '{{URL::Route("academic.section")}}';
     window.changeExportColumnIndex = 4;
-    window.changeExportColumnValue = ['Present', 'Absent'];
+    window.changeExportColumnValue = ['Có', 'Vắng'];
     window.excludeFilterComlumns = [0, 4, 5, 6, 7];
     Academic.attendanceInit();
     $('title').text($('title').text() + '-' + $('select[name="class_id"] option[selected]').text() + '(' + $(

@@ -1,20 +1,16 @@
 <?php
-
 namespace App;
 
+use App\Http\Helpers\AppHelper;
+use Hrshadhin\Userstamps\UserstampsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Hrshadhin\Userstamps\UserstampsTrait;
-use App\Http\Helpers\AppHelper;
 use Illuminate\Support\Arr;
-
 
 class Student extends Model
 {
     use SoftDeletes;
     use UserstampsTrait;
-
-
     /**
      * The attributes that are mass assignable.
      *
@@ -43,7 +39,6 @@ class Student extends Model
         'permanent_address',
         'status',
     ];
-
     public function registration()
     {
         return $this->hasMany('App\Registration', 'student_id');
@@ -52,12 +47,10 @@ class Student extends Model
     {
         return Arr::get(AppHelper::GENDER, $value);
     }
-
     public function getReligionAttribute($value)
     {
         return Arr::get(AppHelper::RELIGION, $value);
     }
-
     public function getBloodGroupAttribute($value)
     {
         return Arr::get(AppHelper::BLOOD_GROUP, $value);

@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Hrshadhin\Userstamps\UserstampsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Hrshadhin\Userstamps\UserstampsTrait;
 
 class Event extends Model
 {
@@ -12,9 +12,8 @@ class Event extends Model
     use UserstampsTrait;
 
     protected $dates = [
-        'event_time'
+        'event_time',
     ];
-
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +26,7 @@ class Event extends Model
         'description',
         'cover_photo',
         'cover_video',
-        'tags',
+        'location',
         'slider_1',
         'slider_2',
         'slider_3',

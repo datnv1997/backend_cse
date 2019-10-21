@@ -30,73 +30,68 @@
 
                     <p class="lead section-title-top-zero">Chọn lớp học phần:</p>
                     <div class="row">
-                        <form novalidate id="entryForm" action="{{URL::Route('student_attendance.create')}}"
+                        <form novalidate id="entryForm" action="{{URL::Route('student_attendance.createDiemDanh')}}"
                             method="post" enctype="multipart/form-data">
-                            <div class="contaier">
+                            @csrf
+                            <div class="container">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="sel1">Lớp:</label>
-                                        <select class="form-control" id="sel1">
-                                            @foreach($class as $class)
-                                            <option value="{{$class->id}}">{{$class->id}}</option>
-                                            @endforeach
+                                        <select class="form-control" name="sel1">
+
+                                            <option value="{{$class->id}}" selected>{{$class->id}}</option>
+
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="container">
+
+                                    <p class="lead section-title-top-zero">Danh sách sinh viên:
+                                    </p>
+                                    <div class="col-md-12">
 
 
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-info margin-top-20"><i class="fa fa-filter"></i>
-                                    Điểm danh</button>
+                                        <table id="studentListTable"
+                                            class="table table-bordered table-striped table-responsive attendance-add">
+
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">#</th>
+                                                    <th width="5%">Msv</th>
+                                                    <th width="30%">Tên</th>
+                                                    <th width="30%">
+                                                        Có mặt?
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($students as $key=>$student)
+                                                <tr>
+                                                    <td>{{$key}}</td>
+                                                    <td>{{$student->student_id}}</td>
+                                                    <td>{{$student->name}}</td>
+                                                    <td>
+                                                        <div class="checkbox icheck inline_icheck">
+                                                            <input type="checkbox"
+                                                                name="present[{{$student->student_id}}]">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <button type="submit" class="btn btn-info pull-right"><i
+                                                class="fa fa-plus-circle"></i>
+                                            Add Attendance</button>
+                                    </div>
+                                </div>
                             </div>
+
                         </form>
                     </div>
-
-                    <p class="lead section-title-top-zero">Danh sách sinh viên:</p>
-                    <div class="row">
-                        <div class="col-md-12">
-
-                            <form novalidate id="entryForm" action="{{URL::Route('student_attendance.createDiemDanh')}}"
-                                method="post" enctype="multipart/form-data">
-                                @csrf
-
-                                <table id="studentListTable"
-                                    class="table table-bordered table-striped table-responsive attendance-add">
-
-                                    <thead>
-                                        <tr>
-                                            <th width="5%">#</th>
-                                            <th width="5%">Msv</th>
-                                            <th width="30%">Tên</th>
-                                            <th width="30%">
-                                                Có mặt?
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($students as $key=>$student)
-                                        <tr>
-                                            <td>{{$key}}</td>
-                                            <td>{{$student->student_id}}</td>
-                                            <td>{{$student->name}}</td>
-                                            <td>
-                                                <div class="checkbox icheck inline_icheck">
-                                                    <input type="checkbox" name="present[{{$student->student_id}}]">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <button type="submit" class="btn btn-info pull-right"><i class="fa fa-plus-circle"></i>
-                                    Add Attendance</button>
-                            </form>
-
-                        </div>
-                    </div>
-
 
 
                 </div>

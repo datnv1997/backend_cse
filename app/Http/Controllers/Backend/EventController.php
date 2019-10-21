@@ -52,36 +52,20 @@ class EventController extends Controller
         $data['event_time'] = $datetime;
 
         $fileName = null;
+
         if ($request->hasFile('cover_photo')) {
-            $storagepath = $request->file('cover_photo')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['cover_photo'] = $fileName;
-
-        }
-        $fileName = null;
-        if ($request->hasFile('slider_1')) {
-            $storagepath = $request->file('slider_1')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['slider_1'] = $fileName;
-
-        }
-        if ($request->hasFile('slider_2')) {
-            $storagepath = $request->file('slider_2')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['slider_2'] = $fileName;
-
-        }
-        if ($request->hasFile('slider_3')) {
-            $storagepath = $request->file('slider_3')->store('public/events');
-            $fileName = basename($storagepath);
-            $data['slider_3'] = $fileName;
+            $img = $request->cover_photo;
+            $nameImg = $img->getClientOriginalName();
+            $img->move('images', $nameImg);
+            $file_path = "/images/" . $nameImg;
+            $data['cover_photo'] = $file_path;
 
         }
 
         Event::create($data);
-        Cache::forget('upcomming_event');
+        // Cache::forget('upcomming_event');
 
-        return redirect()->back()->with('success', 'New event added.');
+        return redirect()->route('event.index')->with('Đã thêm thành công');
     }
 
     public function edit($id)

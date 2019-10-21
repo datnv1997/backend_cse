@@ -104,11 +104,13 @@ class ArticleController extends Controller
     public function edit($id)
     {
         //
+        $tempCate = Categories::select('id', 'name')->get();
+
         $model = Articles::find($id);
         $obj = Categories::where('id', $model->categoryIds)->get();
         $objName = $obj[0]->name;
 
-        return view('backend.articles.edit', compact('model', 'objName', 'obj'));
+        return view('backend.articles.edit', compact('model', 'objName', 'obj', 'tempCate'));
     }
 
     /**
@@ -156,7 +158,7 @@ class ArticleController extends Controller
         $model->subDescription = $subDescription;
         $model->images = $pathImg;
         $model->categoryIds = $categoryIds;
-        $model->createdDate = Carbon::now();
+        // $model->createdDate = Carbon::now();
 
         $model->save();
         return redirect('/articles');

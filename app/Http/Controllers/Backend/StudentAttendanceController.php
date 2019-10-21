@@ -66,7 +66,8 @@ class StudentAttendanceController extends Controller
         $this->classId = $class_id;
         // echo $this->classId;
         $students = StudentAttendance::all()->where('class_id', $class_id);
-        $class = IClass::all();
+        $class = IClass::find($class_id);
+        // dd($class);
         return view('backend.attendance.student.checkStudent', compact('students', "class"));
     }
     public function createDiemDanh(Request $request)
@@ -75,18 +76,30 @@ class StudentAttendanceController extends Controller
         $present = $request->get('present', []);
 
         $idAttendance = array_keys($present);
-
+        // dd($idAttendance);
         $dateTimeNow = Carbon::now()->format('Y-m-d');
-        echo $this->classId;
+        $inputClass = $request->input('sel1');
+        // echo gettype(intval($inputClass));
+        $allStudent = StudentAttendance::all()->where('class_id', intval($inputClass));
 
-        // $model = new StudentAttendance();
-        // $model->student_id = "";
-        // $model->class_id = "";
-        // $model->attendance_date = "";
-        // $model->present = "";
-        // $model->save();
-        // echo $dateTimeNow;
+        $dataArray = array();
 
+        foreach ($allStudent as $data) {
+
+            $tempId = $data->student_id;
+            $class_id = $inputClass;
+            $student_id = $tempId;
+            $attendance_date = $dateTimeNow;
+            $present = 0;
+            if (in_array($tempId, $idAttendance)) {
+                $present = 1;
+            } else {
+                $present = 0;
+            }
+            $tempArray = ['class_id' => $inputClass, 'student_id' => $tempId, 'attendance_date' => $dateTimeNow, 'present' => $present];
+            array_push($dataArray, $tempArray);
+        }
+        StudentAttendance::insert($dataArray);
     }
     private function getAttendanceByFilters($class_id, $acYear, $attendance_date, $isCount = false)
     {

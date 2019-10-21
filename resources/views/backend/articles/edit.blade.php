@@ -52,7 +52,7 @@
 
                                         <option>-</option>
                                         <option value="{{$objName}}" selected>{{$objName}}</option>
-                                        @foreach($obj as $data)
+                                        @foreach($tempCate as $data)
                                         @if($data->name!=$objName)
                                         <option value="{{$data->name}}">{{$data->name}}</option>
                                         @endif

@@ -9,6 +9,7 @@ use App\Http\Helpers\AppHelper;
 use App\IClass;
 use App\Jobs\PushStudentAbsentJob;
 use App\Registration;
+use App\Student;
 use App\StudentAttendance;
 use Carbon\Carbon;
 use DateTime;
@@ -26,6 +27,12 @@ class StudentAttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function searchAndCreateAttendance(Request $request)
+    {
+        $classId = $request->input('class_id');
+
+        return redirect('/student-attendance/check/' . $classId);
+    }
     public function seachAttendance(Request $request)
     {
         $date = $request->input('attendance_date');
@@ -35,19 +42,41 @@ class StudentAttendanceController extends Controller
 
         $class = $request->input('sel1');
         return redirect('/student-attendance/search/' . $class . '/' . $joinDate);
+
     }
+
     public function seachParamAttendance($class, $date)
     {
         // echo $date;
         $newformat = new DateTime($date);
         $formatDate = $newformat->format('Y-m-d');
         $student = StudentAttendance::where('class_id', $class)->where('attendance_date', $formatDate)->get();
-        // echo $student;
+        $arrayName = [];
+        $tempStudent = Student::select('id', 'name')->get();
+        $tempId = [];
+        foreach ($student as $data) {
+            // dd(gettype($data));
+            array_push($tempId, $data->student_id);
+        }
+
+        $tempNameStudent = [];
+        foreach ($tempStudent as $data) {
+            if (in_array($data->id, $tempId)) {
+                array_push($tempNameStudent, $data->name);
+            }
+
+        }
+        foreach ($student as $key => $data) {
+            if (count($tempNameStudent) > $key) {
+                $data->name = $tempNameStudent[$key];
+            }
+        }
+        // dd($student);
         $iClass = IClass::all();
         return view('backend.attendance.student.list', compact(
             'student',
             'iClass',
-            'formatDate'
+            'formatDate',
         ));
 
     }
@@ -67,6 +96,26 @@ class StudentAttendanceController extends Controller
         // echo $this->classId;
         $students = StudentAttendance::all()->where('class_id', $class_id);
         $class = IClass::find($class_id);
+
+        $tempStudent = Student::select('id', 'name')->get();
+        $tempId = [];
+        foreach ($students as $data) {
+            // dd(gettype($data));
+            array_push($tempId, $data->student_id);
+        }
+
+        $tempNameStudent = [];
+        foreach ($tempStudent as $data) {
+            if (in_array($data->id, $tempId)) {
+                array_push($tempNameStudent, $data->name);
+            }
+
+        }
+        foreach ($students as $key => $data) {
+            if (count($tempNameStudent) > $key) {
+                $data->name = $tempNameStudent[$key];
+            }
+        }
         // dd($class);
         return view('backend.attendance.student.checkStudent', compact('students', "class"));
     }
@@ -83,22 +132,23 @@ class StudentAttendanceController extends Controller
         $allStudent = StudentAttendance::all()->where('class_id', intval($inputClass));
 
         $dataArray = array();
-
+        // $tempArray = ['class_id' => $inputClass, 'student_id' => '1', 'attendance_date' => $dateTimeNow, 'present' => 1];
+        // array_push($dataArray, $tempArray);
         foreach ($allStudent as $data) {
-
             $tempId = $data->student_id;
             $class_id = $inputClass;
             $student_id = $tempId;
             $attendance_date = $dateTimeNow;
             $present = 0;
             if (in_array($tempId, $idAttendance)) {
-                $present = 1;
+                $present = '1';
             } else {
-                $present = 0;
+                $present = '0';
             }
             $tempArray = ['class_id' => $inputClass, 'student_id' => $tempId, 'attendance_date' => $dateTimeNow, 'present' => $present];
             array_push($dataArray, $tempArray);
         }
+        // dd($dataArray);
         StudentAttendance::insert($dataArray);
     }
     private function getAttendanceByFilters($class_id, $acYear, $attendance_date, $isCount = false)

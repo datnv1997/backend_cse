@@ -81,9 +81,7 @@
                                     <th width="5%">MSV</th>
                                     <th width="20%">Họ tên</th>
                                     <th width="10%">Ngày điểm danh</th>
-                                    <th width="10%">Thời gian vào</th>
-                                    <th width="15%">Thời gian ra</th>
-                                    <th width="15%">Tổng thời gian</th>
+
                                     <th width="5%">Trạng thái</th>
                                 </tr>
                             </thead>

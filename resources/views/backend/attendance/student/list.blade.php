@@ -62,7 +62,8 @@
                         </div>
                         <div class="box-tools pull-right">
 
-                            <a class="btn btn-info btn-sm" href="/student-attendance/create"><i class="fa fa-plus-circle"></i> Điểm
+                            <a class="btn btn-info btn-sm" href="/student-attendance/create"><i
+                                    class="fa fa-plus-circle"></i> Điểm
                                 Danh</a>
                         </div>
                 </div>
@@ -78,9 +79,7 @@
                                     <th width="5%">MSV</th>
                                     <th width="20%">Họ tên</th>
                                     <th width="10%">Ngày điểm danh</th>
-                                    <th width="10%">Thời gian vào</th>
-                                    <th width="15%">Thời gian ra</th>
-                                    <th width="15%">Tổng thời gian</th>
+
                                     <th width="5%">Trạng thái</th>
                                 </tr>
                             </thead>
@@ -91,9 +90,6 @@
                                     <td>{{$data->student_id}}</td>
                                     <td>{{$data->name}}</td>
                                     <td>{{$data->attendance_date}}</td>
-                                    <td>{{$data->in_time}}</td>
-                                    <td>{{$data->out_time}}</td>
-                                    <td>{{$data->staying_hour}}</td>
                                     <td>{{$data->present}}</td>
                                 </tr>
                                 @endforeach

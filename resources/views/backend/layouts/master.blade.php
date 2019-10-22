@@ -42,6 +42,10 @@
         overflow: auto !important;
     }
 
+    #toast-container {
+        display: none !important;
+    }
+
     footer {
         display: none;
     }

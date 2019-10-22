@@ -29,27 +29,29 @@
                 <div class="box-body">
 
                     <p class="lead section-title-top-zero">Chọn lớp học phần:</p>
-                    <div class="row">
-                        <form novalidate id="entryForm" action="{{URL::Route('student_attendance.createDiemDanh')}}"
-                            method="post" enctype="multipart/form-data">
-                            @csrf
-                            <div class="container">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="sel1">Lớp:</label>
-                                        <select class="form-control" name="sel1">
+                    <div class="container" style="width:100%">
+                        <div class="row">
+                            <form novalidate id="entryForm" action="{{URL::Route('student_attendance.createDiemDanh')}}"
+                                method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="container" style="padding-left:0">
+                                    <div class="col-md-6" style="padding-left:0">
+                                        <div class="form-group">
+                                            <label for="sel1">Lớp:</label>
+                                            <select class="form-control" name="sel1">
 
-                                            <option value="{{$class->id}}" selected>{{$class->id}}</option>
+                                                <option value="{{$class->id}}" selected>{{$class->id}}</option>
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="container">
+                                <div class="row">
 
-                                    <p class="lead section-title-top-zero">Danh sách sinh viên:
+
+                                    <p class="lead section-title-top-zero p-5" style="padding-left:15px">Danh sách sinh
+                                        viên:
                                     </p>
                                     <div class="col-md-12">
 
@@ -83,16 +85,18 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+
                                         <button type="submit" class="btn btn-info pull-right"><i
                                                 class="fa fa-plus-circle"></i>
                                             Add Attendance</button>
+
                                     </div>
+
                                 </div>
-                            </div>
 
-                        </form>
+                            </form>
+                        </div>
                     </div>
-
 
                 </div>
                 <!-- /.box-body -->

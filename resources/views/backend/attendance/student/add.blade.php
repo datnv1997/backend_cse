@@ -39,8 +39,9 @@
                     @if(!count($students))
                     <p class="lead section-title-top-zero">Chọn lớp học phần:</p>
                     <div class="row">
-                        <form novalidate id="entryForm" action="{{URL::Route('student_attendance.create')}}"
-                            method="post" enctype="multipart/form-data">
+                        <form novalidate id="entryForm"
+                            action="{{URL::Route('student_attendance.searchAndCreateAttendance')}}" method="post"
+                            enctype="multipart/form-data">
                             @csrf
                             @if(AppHelper::getInstituteCategory() == 'college')
                             <div class="col-md-3">
@@ -55,9 +56,9 @@
                             @endif
                             <div class="col-md-3">
                                 <div class="form-group has-feedback">
-                                    <label for="class_id">Class<span class="text-danger">*</span></label>
-                                    {!! Form::select('class_id', $classes, null , ['placeholder' => 'Pick a
-                                    class...','class' => 'form-control select2', 'required' => 'true']) !!}
+                                    <label for="class_id">Lớp học phần<span class="text-danger">*</span></label>
+                                    {!! Form::select('class_id', $classes, null , ['placeholder' => 'Chọn lớp học
+                                    phần...','class' => 'form-control select2', 'required' => 'true']) !!}
                                     <span class="form-control-feedback"></span>
                                     <span class="text-danger">{{ $errors->first('class_id') }}</span>
                                 </div>
@@ -65,7 +66,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group has-feedback">
-                                    <label for="attendance_date">Date<span class="text-danger">*</span></label>
+                                    <label for="attendance_date">Ngày điểm danh<span class="text-danger"></span></label>
                                     <input type='text' class="form-control date_picker attendanceExistsChecker" readonly
                                         name="attendance_date" placeholder="date" value="{{$attendance_date}}" required
                                         minlength="10" maxlength="11" />
@@ -80,105 +81,7 @@
                         </form>
                     </div>
                     @endif
-                    <p class="lead section-title-top-zero">Danh sách sinh viên:</p>
-                    <div class="row">
-                        <div class="col-md-12">
-                            @if(count($students))
-                            <div class="well text-center" style="padding: 0; margin: 0; font-size: 20px;">
-                                <span class="text-info">Attendance Entry for {{$attendance_date}}</span><br>
-                                @if(AppHelper::getInstituteCategory() == 'college')
-                                @endif
-                                <span class="text-info">Class: {{$class_name}}</span><br>
 
-                            </div>
-                            <form novalidate id="entryForm" action="{{URL::Route('student_attendance.store')}}"
-                                method="post" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" name="academic_year" value="{{$acYear}}">
-                                <input type="hidden" name="class_id" value="{{$class_id}}">
-                                <input type="hidden" name="section_id" value="{{$section_id}}">
-                                <input type="hidden" name="attendance_date" value="{{$attendance_date}}">
-                                <table id="studentListTable"
-                                    class="table table-bordered table-striped table-responsive attendance-add">
-                                    <caption>
-                                        <div class="checkbox icheck pull-right">
-                                            <label>
-                                                <input type="checkbox" name="is_send_notification" class="notMe"
-                                                    @if($sendNotification) checked @endif> <span
-                                                    class="text-bold text-warning">Send Absent Notification?</span>
-                                            </label>
-                                        </div>
-                                    </caption>
-                                    <thead>
-                                        <tr>
-                                            <th width="5%">#</th>
-                                            <th width="55%">Name</th>
-                                            <th width="10%">Roll No.</th>
-                                            {{--<th width="15%">In Time</th>--}}
-                                            {{--<th width="15%">Out Time</th>--}}
-                                            {{--<th width="5%">Staying Hours</th>--}}
-                                            <th width="30%">
-                                                Is Present?
-                                                <div class="checkbox icheck inline_icheck">
-                                                    <label>
-                                                        <input type="checkbox" id="toggleCheckboxes"
-                                                            class="dont-style-notMe"> <span class="text-bold">Select or
-                                                            Deselect All</span>
-                                                    </label>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($students as $student)
-                                        <tr>
-                                            <td>
-                                                {{$loop->iteration}}
-                                            </td>
-                                            <td>
-                                                <span class="text-bold">{{$student->info->name}}
-                                                    [{{$student->regi_no}}]</span>
-                                                <input type="hidden" value="{{$student->id}}" name="registrationIds[]">
-                                            </td>
-                                            <td>
-                                                {{$student->roll_no}}
-                                            </td>
-
-                                            {{--<td>--}}
-                                            {{--<div class="input-group">--}}
-                                            {{--<input type='text' class="form-control date_time_picker inTime" readonly  name="inTime[{{$student->id}}]"
-                                            placeholder="date time" value="{{$attendance_date}} 00:00 am" required
-                                            minlength="18" maxlength="19" />--}}
-                                            {{--<span class="fa fa-calendar form-control-feedback"></span>--}}
-                                            {{--</div>--}}
-
-                                            {{--</td>--}}
-                                            {{--<td>--}}
-                                            {{--<div class="input-group">--}}
-                                            {{--<input type='text' class="form-control date_time_picker outTime" readonly  name="outTime[{{$student->id}}]"
-                                            placeholder="date time" value="{{$attendance_date}} 00:00 am" required
-                                            minlength="18" maxlength="19" />--}}
-                                            {{--<span class="fa fa-calendar form-control-feedback"></span>--}}
-                                            {{--</div>--}}
-                                            {{--</td>--}}
-                                            {{--<td>--}}
-                                            {{--<span class="text-bold stayingHour">00:00</span>--}}
-                                            {{--</td>--}}
-                                            <td>
-                                                <div class="checkbox icheck inline_icheck">
-                                                    <input type="checkbox" name="present[{{$student->id}}]">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <button type="submit" class="btn btn-info pull-right"><i class="fa fa-plus-circle"></i>
-                                    Add Attendance</button>
-                            </form>
-                            @endif
-                        </div>
-                    </div>
 
 
 
@@ -201,7 +104,7 @@
 window.section_list_url = '{{URL::Route("academic.section")}}';
 
 $(document).ready(function() {
-    Academic.attendanceInit();
+    // Academic.attendanceInit();
 });
 </script>
 @endsection

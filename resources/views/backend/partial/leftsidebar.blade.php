@@ -5,38 +5,38 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li>
                 <a href="{{ URL::route('user.dashboard') }}">
-                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    <i class="fa fa-dashboard"></i> <span>Trang chủ</span>
                 </a>
             </li>
             <li>
                 <a href="{{ URL::route('user.categories') }}">
-                    <i class="fa fa-dashboard"></i> <span>Categories</span>
+                    <i class="fa fa-dashboard"></i> <span>Danh Mục</span>
                 </a>
             </li>
             <li>
                 <a href="{{ URL::route('user.articles') }}">
-                    <i class="fa fa-dashboard"></i> <span>articles</span>
+                    <i class="fa fa-dashboard"></i> <span>Bài viết</span>
                 </a>
             </li>
             @can('event.index')
             <li>
                 <a href="{{ URL::route('event.index') }}">
                     <i class="fa fa-bullhorn"></i>
-                    <span>Events</span>
+                    <span>Sự kiện</span>
                 </a>
             </li>
             @endcan
             @can('student.index')
             <li>
                 <a href="{{ URL::route('student.index') }}">
-                    <i class="fa icon-student"></i> <span>Students</span>
+                    <i class="fa icon-student"></i> <span>Sinh viên</span>
                 </a>
             </li>
             @endcan
             @can('teacher.index')
             <li>
                 <a href="{{ URL::route('teacher.index') }}">
-                    <i class="fa icon-teacher"></i> <span>Teachers</span>
+                    <i class="fa icon-teacher"></i> <span>Giáo viên</span>
                 </a>
             </li>
             @endcan
@@ -52,7 +52,12 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ URL::route('student_attendance.index') }}">
-                            <i class="fa icon-student"></i> <span>Student Attendance</span>
+                            <i class="fa icon-student"></i> <span>Danh sách điểm danh</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ URL::route('student_attendance.create') }}">
+                            <i class="fa icon-student"></i> <span>Tạo điểm danh</span>
                         </a>
                     </li>
 

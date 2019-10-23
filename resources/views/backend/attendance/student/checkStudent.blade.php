@@ -73,12 +73,11 @@
                                                 @foreach($students as $key=>$student)
                                                 <tr>
                                                     <td>{{$key}}</td>
-                                                    <td>{{$student->student_id}}</td>
+                                                    <td>{{$student->id}}</td>
                                                     <td>{{$student->name}}</td>
                                                     <td>
                                                         <div class="checkbox icheck inline_icheck">
-                                                            <input type="checkbox"
-                                                                name="present[{{$student->student_id}}]">
+                                                            <input type="checkbox" name="present[{{$student->id}}]">
                                                         </div>
                                                     </td>
                                                 </tr>

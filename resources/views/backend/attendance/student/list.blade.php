@@ -11,13 +11,13 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Student Attendance
-        <small>List</small>
+        Điểm danh sinh viên
+        <small>Danh sách</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><i class="fa icon-attendance"></i> Attendance</li>
-        <li class="active">Student</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><i class="fa icon-attendance"></i> điểm danh</li>
+        <li class="active">Sinh viên</li>
     </ol>
 </section>
 <!-- ./Section header -->

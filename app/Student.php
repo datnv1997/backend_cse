@@ -21,6 +21,7 @@ class Student extends Model
         'name',
         'dob',
         'gender',
+        'class_id',
         'religion',
         'blood_group',
         'nationality',

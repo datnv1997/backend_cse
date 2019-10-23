@@ -14,12 +14,12 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Student
-        <small>List</small>
+        Sinh Viên
+        <small>Danh sách</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Student</li>
+        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Danh sách</li>
     </ol>
 </section>
 <!-- ./Section header -->
@@ -29,20 +29,7 @@
         <div class="col-md-12">
             <div class="box box-info">
                 <div class="box-header">
-                    @if(AppHelper::getInstituteCategory() == 'college')
-                    <div class="col-md-3">
-                        <div class="form-group has-feedback">
-                            {!! Form::select('academic_year', $academic_years, $acYear , ['placeholder' => 'Pick a
-                            year...','class' => 'form-control select2', 'required' => 'true']) !!}
-                        </div>
-                    </div>
-                    @endif
-                    <div class="col-md-3">
-                        <div class="form-group has-feedback">
-                            {!! Form::select('class_id', $classes, $iclass , ['placeholder' => 'Pick a class...','class'
-                            => 'form-control select2', 'required' => 'true']) !!}
-                        </div>
-                    </div>
+
                     <div class="col-md-3">
                         <div class="form-group has-feedback">
 
@@ -62,15 +49,14 @@
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th class="notexport" width="7%">Photo</th>
-                                    <th width="8%">Regi. No.</th>
-                                    <th width="8%">Roll No.</th>
-                                    <th width="8%">ID Card</th>
-                                    <th width="19%">Name</th>
-                                    <th width="10%">Phone No</th>
-                                    <th width="10%">Email</th>
-                                    <th width="10%">Status</th>
-                                    <th class="notexport" width="15%">Action</th>
+                                    <th class="notexport" width="7%">Họ Tên</th>
+                                    <th width="8%">Ngày sinh</th>
+                                    <th width="8%">Giới tính</th>
+                                    <th width="8%">Email</th>
+                                    <th width="19%">Id lớp</th>
+                                    <th width="10%">SDT</th>
+                                    <th width="10%">Ghi chú</th>
+                                    <th class="notexport" width="15%">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,34 +66,22 @@
                                         {{$loop->iteration}}
                                     </td>
                                     <td>
-                                        <img class="img-responsive center" style="height: 35px; width: 35px;"
-                                            src="@if($info->student->photo ){{ asset('storage/student')}}/{{ $info->class_id }}/{{ $info->student->photo }} @else {{ asset('images/avatar.jpg')}} @endif"
-                                            alt="">
+                                        {{$info->name}}
                                     </td>
-                                    <td>{{ $info->regi_no }}</td>
-                                    <td>{{ $info->roll_no }}</td>
-                                    <td>{{ $info->card_no }}</td>
-                                    <td>{{ $info->student->name }}</td>
-                                    <td>{{ $info->student->phone_no }}</td>
-                                    <td>{{ $info->student->email }}</td>
+                                    <td>{{ $info->dob }}</td>
+                                    <td>{{ $info->gender }}</td>
+                                    <td>{{ $info->email }}</td>
+                                    <td>{{ $info->class_id }}</td>
+                                    <td>{{ $info->phone_no }}</td>
+                                    <td>{{ $info->note }}</td>
+
                                     <td>
-                                        <!-- todo: have problem in mobile device -->
-                                        <input class="statusChange" type="checkbox" data-pk="{{$info->id}}"
-                                            @if($info->status) checked @endif data-toggle="toggle" data-on="<i
-                                            class='fa fa-check-circle'></i>" data-off="<i class='fa fa-ban'></i>"
-                                        data-onstyle="success" data-offstyle="danger">
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a title="Details" href="{{URL::route('student.show',$info->id)}}"
-                                                class="btn btn-primary btn-sm"><i class="fa fa-eye"></i>
-                                            </a>
-                                        </div>
-                                        <div class="btn-group">
+
+                                        <!-- <div class="btn-group">
                                             <a title="Edit" href="{{URL::route('student.edit',$info->id)}}"
                                                 class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
                                             </a>
-                                        </div>
+                                        </div> -->
                                         <!-- todo: have problem in mobile device -->
                                         <div class="btn-group">
                                             <form class="myAction" method="POST"
@@ -125,20 +99,7 @@
                                 @endforeach
 
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th class="notexport" width="7%">Photo</th>
-                                    <th width="8%">Regi. No.</th>
-                                    <th width="8%">Roll No.</th>
-                                    <th width="8%">ID Card</th>
-                                    <th width="19%">Name</th>
-                                    <th width="10%">Phone No</th>
-                                    <th width="10%">Email</th>
-                                    <th width="10%">Status</th>
-                                    <th class="notexport" width="15%">Action</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                 </div>

@@ -94,28 +94,30 @@ class StudentAttendanceController extends Controller
     {
         $this->classId = $class_id;
         // echo $this->classId;
-        $students = StudentAttendance::all()->where('class_id', $class_id);
+        $students = Student::all()->where('class_id', $class_id);
         $class = IClass::find($class_id);
 
-        $tempStudent = Student::select('id', 'name')->get();
-        $tempId = [];
-        foreach ($students as $data) {
-            // dd(gettype($data));
-            array_push($tempId, $data->student_id);
-        }
+        // $students = StudentAttendance::all()->where('class_id', $class_id);
 
-        $tempNameStudent = [];
-        foreach ($tempStudent as $data) {
-            if (in_array($data->id, $tempId)) {
-                array_push($tempNameStudent, $data->name);
-            }
+        // $tempStudent = Student::select('id', 'name')->get();
+        // $tempId = [];
+        // foreach ($students as $data) {
+        //     // dd(gettype($data));
+        //     array_push($tempId, $data->student_id);
+        // }
 
-        }
-        foreach ($students as $key => $data) {
-            if (count($tempNameStudent) > $key) {
-                $data->name = $tempNameStudent[$key];
-            }
-        }
+        // $tempNameStudent = [];
+        // foreach ($tempStudent as $data) {
+        //     if (in_array($data->id, $tempId)) {
+        //         array_push($tempNameStudent, $data->name);
+        //     }
+
+        // }
+        // foreach ($students as $key => $data) {
+        //     if (count($tempNameStudent) > $key) {
+        //         $data->name = $tempNameStudent[$key];
+        //     }
+        // }
         // dd($class);
         return view('backend.attendance.student.checkStudent', compact('students', "class"));
     }
@@ -129,15 +131,15 @@ class StudentAttendanceController extends Controller
         $dateTimeNow = Carbon::now()->format('Y-m-d');
         $inputClass = $request->input('sel1');
         // echo gettype(intval($inputClass));
-        $allStudent = StudentAttendance::all()->where('class_id', intval($inputClass));
-
+        $allStudent = Student::all()->where('class_id', $inputClass);
+        // dd($allStudent);
         $dataArray = array();
         // $tempArray = ['class_id' => $inputClass, 'student_id' => '1', 'attendance_date' => $dateTimeNow, 'present' => 1];
         // array_push($dataArray, $tempArray);
         foreach ($allStudent as $data) {
-            $tempId = $data->student_id;
+            $tempId = $data->id;
             $class_id = $inputClass;
-            $student_id = $tempId;
+            // $student_id = $tempId;
             $attendance_date = $dateTimeNow;
             $present = 0;
             if (in_array($tempId, $idAttendance)) {
@@ -150,6 +152,7 @@ class StudentAttendanceController extends Controller
         }
         // dd($dataArray);
         StudentAttendance::insert($dataArray);
+        return redirect('/student-attendance');
     }
     private function getAttendanceByFilters($class_id, $acYear, $attendance_date, $isCount = false)
     {
@@ -252,7 +255,26 @@ class StudentAttendanceController extends Controller
         ));
 
     }
+    public function attendanceFrontEnd($msv, $class_id)
+    {
 
+        $data = StudentAttendance::select('*')
+            ->where('student_id', $msv)
+            ->where('class_id', $class_id)
+            ->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list attendance",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
     /**
      * Store a newly created resource in storage.
      *

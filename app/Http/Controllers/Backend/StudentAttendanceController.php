@@ -258,11 +258,24 @@ class StudentAttendanceController extends Controller
     public function attendanceFrontEnd($msv, $class_id)
     {
 
-        $data = StudentAttendance::select('*')
+        $attandance = StudentAttendance::select('*')
             ->where('student_id', $msv)
             ->where('class_id', $class_id)
             ->get();
 
+        $student = Student::select('id', 'name')->get();
+
+        foreach ($attandance as $key => $data) {
+            foreach ($student as $student) {
+
+                if ($data->student_id == $student->id) {
+                    $temp = $student->name;
+                    $attandance[$key]->name = $temp;
+                    // dd($student->name);
+                }
+            }
+        }
+        $data = $attandance;
         if (count($data) > 0) {
             return response()->json([
                 "code" => "200",

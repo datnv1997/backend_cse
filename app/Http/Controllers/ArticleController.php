@@ -23,7 +23,7 @@ class ArticleController extends Controller
     }
     public function add()
     {
-        $obj = Categories::whereNotNull('parentId')->get();
+        $obj = Categories::all();
 
         return view('backend.articles.addArticle', compact('obj'));
     }
@@ -317,6 +317,40 @@ class ArticleController extends Controller
             return response()->json([
                 "code" => "200",
                 "message" => "list banner",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function getArticleTeacher()
+    {
+        $id = 33;
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list teacher",
+                "data" => $data,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+    public function getArticleOldStudent()
+    {
+        $id = 34;
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(6)->get();
+
+        if (count($data) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "news School",
                 "data" => $data,
             ], 200);
         }

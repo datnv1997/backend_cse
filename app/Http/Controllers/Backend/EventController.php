@@ -144,7 +144,24 @@ class EventController extends Controller
 
     public function getAllEvent()
     {
-        $event = Event::select('id', 'event_time', 'title', 'slug', 'cover_photo', 'description', 'created_at')->get();
+        $event = Event::select('*')->orderBy('event_time', 'DESC')->get();
+
+        if (count($event) > 0) {
+            return response()->json([
+                "code" => "200",
+                "message" => "list event",
+                "data" => $event,
+            ], 200);
+        }
+
+        return response()->json([
+            "message" => "data is null",
+        ], 400);
+    }
+
+    public function detailEvent($id)
+    {
+        $event = Event::select('*')->where('id', $id)->get();
 
         if (count($event) > 0) {
             return response()->json([
@@ -158,10 +175,9 @@ class EventController extends Controller
             "message" => "data is null",
         ], 400);
     }
-
-    public function detailEvent($id)
+    public function relatedEvent($id)
     {
-        $event = Event::all()->where('id', $id);
+        $event = Event::select('*')->where('id', '!=', $id)->orderBy('created_at', 'DESC')->take(3)->get();
 
         if (count($event) > 0) {
             return response()->json([

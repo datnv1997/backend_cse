@@ -36,7 +36,7 @@
             </a>
         </div>
         <div class="login-box-body">
-            <p class="login-box-msg text-danger">Use your username and password to Login</p>
+            <!-- <p class="login-box-msg text-danger">Use your username and password to Login</p> -->
             <form novalidate id="loginForm" action="{{URL::Route('login')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group has-feedback">
@@ -55,18 +55,18 @@
                     <div class="col-xs-6">
                         <div class="checkbox icheck">
                             <label>
-                                <input name="remember" type="checkbox"> Remember Me
+                                <input name="remember" type="checkbox"> Lưu đăng nhập
                             </label>
                         </div>
                     </div>
                     <!-- /.col -->
                     <div class="col-xs-6">
-                        <a href="{{URL::Route('forgot')}}" class="forgot-link">Forgot Password</a>
+                        <a href="{{URL::Route('forgot')}}" class="forgot-link">Quên mật khẩu</a>
                     </div>
                     <!-- /.col -->
                 </div>
                 <br>
-                <button type="submit" class="btn btn-lg btn-block btn-flat login-button">SIGN IN</button>
+                <button type="submit" class="btn btn-lg btn-block btn-flat login-button">Đăng nhập</button>
             </form>
 
 

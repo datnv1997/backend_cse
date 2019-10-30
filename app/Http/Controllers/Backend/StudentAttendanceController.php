@@ -264,17 +264,22 @@ class StudentAttendanceController extends Controller
             ->get();
 
         $student = Student::select('id', 'name')->get();
-
+        // dd($student);
         foreach ($attandance as $key => $data) {
-            foreach ($student as $student) {
+            foreach ($student as $students) {
+                // dd($student->id);
+                // echo ($students->id);
+                if ($data->student_id == $students->id) {
+                    // dd($student->id);
 
-                if ($data->student_id == $student->id) {
-                    $temp = $student->name;
+                    $temp = $students->name;
                     $attandance[$key]->name = $temp;
                     // dd($student->name);
+                    break;
                 }
             }
         }
+        // dd($attandance);
         $data = $attandance;
         if (count($data) > 0) {
             return response()->json([

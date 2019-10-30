@@ -87,7 +87,7 @@
 
                                         <button type="submit" class="btn btn-info pull-right"><i
                                                 class="fa fa-plus-circle"></i>
-                                            Add Attendance</button>
+                                            Thêm điểm danh</button>
 
                                     </div>
 

@@ -44,7 +44,7 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa icon-attendance"></i>
-                    <span>Attendance</span>
+                    <span>Điểm danh</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -78,7 +78,7 @@
                     @can('academic.class')
                     <li>
                         <a href="{{ URL::route('academic.class') }}">
-                            <i class="fa fa-sitemap"></i> <span>Class</span>
+                            <i class="fa fa-sitemap"></i> <span>Lớp</span>
                         </a>
                     </li>
                     @endcan
@@ -88,7 +88,7 @@
                     @can('academic.subject')
                     <li>
                         <a href="{{ URL::route('academic.subject') }}">
-                            <i class="fa icon-subject"></i> <span>Subject</span>
+                            <i class="fa icon-subject"></i> <span>Môn học</span>
                         </a>
                     </li>
                     @endcan
@@ -122,14 +122,14 @@
                     </li>
                     <li>
                         <a href="{{route('administrator.user_password_reset')}}">
-                            <i class="fa fa-eye-slash"></i> <span>Reset User Password</span>
+                            <i class="fa fa-eye-slash"></i> <span>Đặt lại mật khẩu</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="{{URL::route('user.role_index')}}">
                             <i class="fa fa-users"></i> <span>Role</span>
                         </a>
-                    </li>
+                    </li> -->
 
                     {{--<li>--}}
                     {{--<a href="#">--}}
@@ -146,13 +146,7 @@
                 </ul>
             </li>
             @endrole
-            @can('user.index')
-            <li>
-                <a href="{{ URL::route('user.index') }}">
-                    <i class="fa fa-users"></i> <span>Users</span>
-                </a>
-            </li>
-            @endcan
+
 
 
             <!-- Frontend Website links and settings -->

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\AcademicYear;
 use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\AppHelper;
@@ -66,7 +67,6 @@ class AcademicController extends Controller
                 'name' => 'required|min:2|max:255',
                 'numeric_value' => 'required|integer',
                 'order' => 'required|integer',
-
                 'note' => 'max:500',
             ]);
 
@@ -84,26 +84,28 @@ class AcademicController extends Controller
                 $data
             );
 
-            if (!$id) {
-                //now notify the admins about this record
-                $msg = $data['name'] . " class added by " . auth()->user()->name;
-                $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
-                // Notification end
+            // if (!$id) {
+            //     //now notify the admins about this record
+            //     $msg = $data['name'] . " class added by " . auth()->user()->name;
+            //     $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
+            //     // Notification end
 
-                //invalid cache
-                Cache::forget('selected_classes_4_dashboard');
-            }
+            //     //invalid cache
+            //     Cache::forget('selected_classes_4_dashboard');
+            // }
 
-            $msg = "Class ";
-            $msg .= $id ? 'updated.' : 'added.';
+            // $msg = "Class ";
+            // $msg .= $id ? 'updated.' : 'added.';
 
-            return redirect()->route('academic.class')->with('success', $msg);
+            return redirect('/academic/class');
         }
 
         //for get request
         $iclass = IClass::find($id);
         $subject = Subject::all();
-        return view('backend.academic.iclass.add', compact('iclass', 'subject'));
+        $academyYear = AcademicYear::all();
+        // dd($academyYear);
+        return view('backend.academic.iclass.add', compact('iclass', 'subject', 'academyYear'));
     }
 
     /**

@@ -14,14 +14,10 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Class
-        <small>@if($iclass) Update @else Add New @endif</small>
+        Lớp học phần
+        <small>@if($iclass) Cập nhật @else Thêm mới @endif</small>
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{{URL::route('academic.class')}}"><i class="fa fa-sitemap"></i> Class</a></li>
-        <li class="active">@if($iclass) Update @else Add @endif</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -35,7 +31,17 @@
                     <div class="box-body">
                         @csrf
                         <div class="row">
-                            <div class="col-md-7">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="sel1">Khóa học</label>
+                                    <select class="form-control" id="sel1">
+                                        @foreach($academyYear as $data)
+                                        <option value={{$data->id}}>{{$data->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-group has-feedback">
                                     <label for="name">Tên lớp<span class="text-danger">*</span></label>
                                     <input autofocus type="text" class="form-control" name="name" placeholder="name"

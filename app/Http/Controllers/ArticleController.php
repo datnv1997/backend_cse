@@ -174,7 +174,7 @@ class ArticleController extends Controller
     {
         //
         Articles::destroy($id);
-        return redirect('/Articles');
+        return redirect('/articles');
 
     }
 

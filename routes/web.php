@@ -59,6 +59,10 @@ Route::post('/delArticles/{id}', 'ArticleController@destroy');
 Route::post('/editArticles/{id}', 'ArticleController@edit');
 Route::post('/updateArticleController/{id}', 'ArticleController@update')->name('user.updateArticleController');
 
+//report
+Route::get('/report', 'ReportController@index')->name('report');
+Route::post('/searchReport', 'ReportController@search')->name('searchReport');
+Route::get('/report/{id}', 'ReportController@result')->name('result');
 // Route::get('/categories', 'CategoryController@index')->name('user.categories');
 
 // Route::get('/articles', function () {

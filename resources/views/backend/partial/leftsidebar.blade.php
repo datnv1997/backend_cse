@@ -102,7 +102,11 @@
                 </ul>
             </li>
 
-
+            <li>
+                <a href="/report">
+                    <i class="fa fa-dashboard"></i> <span>Thống kê</span>
+                </a>
+            </li>
             @role('Admin')
             <li class="treeview">
                 <a href="#">

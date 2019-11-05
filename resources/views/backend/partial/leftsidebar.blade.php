@@ -18,6 +18,12 @@
                     <i class="fa fa-dashboard"></i> <span>Bài viết</span>
                 </a>
             </li>
+
+            <li>
+                <a href="/lesson">
+                    <i class="fa fa-dashboard"></i> <span>Bài giảng</span>
+                </a>
+            </li>
             @can('event.index')
             <li>
                 <a href="{{ URL::route('event.index') }}">
@@ -40,6 +46,7 @@
                 </a>
             </li>
             @endcan
+
             @canany(['student_attendance.index', 'employee_attendance.index'])
             <li class="treeview">
                 <a href="#">

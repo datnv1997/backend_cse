@@ -63,6 +63,11 @@ Route::post('/updateArticleController/{id}', 'ArticleController@update')->name('
 Route::get('/report', 'ReportController@index')->name('report');
 Route::post('/searchReport', 'ReportController@search')->name('searchReport');
 Route::get('/report/{id}', 'ReportController@result')->name('result');
+
+//lesson
+Route::get('/lesson', 'LessonController@index')->name('lesson');
+Route::get('/formAddLesson', 'LessonController@formAddLesson');
+
 // Route::get('/categories', 'CategoryController@index')->name('user.categories');
 
 // Route::get('/articles', function () {

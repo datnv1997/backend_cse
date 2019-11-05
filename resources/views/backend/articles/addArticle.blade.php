@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Categories @endsection
+@section('pageTitle') Bài viết @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -14,13 +14,9 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Add Articles
+        Thêm bài viết
     </h1>
-    <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><i class="fa icon-student"></i> Articles</a></li>
-        <li class="active">Update</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->

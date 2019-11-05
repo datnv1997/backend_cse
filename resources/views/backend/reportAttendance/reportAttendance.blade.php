@@ -42,7 +42,7 @@ var sumStudentIclass = @json($sumStudent);
 var presentStudent = @json($dataPresent);
 var arrayDate = @json($arrayDate);
 
-// console.log(sumStudentIclass);
+console.log(sumStudentIclass);
 // console.log(presentStudent);
 // console.log(arrayDate);
 
@@ -80,9 +80,9 @@ var myChart = new Chart(ctx, {
             yAxes: [{
 
                 ticks: {
-                    suggestedMax: 10,
+                    suggestedMax: sumStudentIclass[0],
                     beginAtZero: true,
-                    stepSize: 2,
+                    stepSize: 1,
 
                 }
             }],

@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Student @endsection
+@section('pageTitle') Bài viết @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -14,13 +14,10 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Articles
-        <small>List</small>
+        Bài Viết
+        <small>Danh sách</small>
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Articles</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->

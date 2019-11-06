@@ -20,7 +20,7 @@
             </li>
 
             <li>
-                <a href="/lesson">
+                <a href="/listLesson">
                     <i class="fa fa-dashboard"></i> <span>Bài giảng</span>
                 </a>
             </li>

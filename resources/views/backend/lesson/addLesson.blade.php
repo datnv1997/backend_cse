@@ -24,7 +24,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-info">
-                <form novalidate id="entryForm" action="{{url('/addArticleController')}}" method="POST"
+                <form novalidate id="entryForm" action="{{url('/addLesson')}}" method="POST"
                     enctype="multipart/form-data">
 
                     <div class="box-body">
@@ -34,7 +34,7 @@
                                 <div class="form-group has-feedback">
                                     <label for="name">Tên bài giảng</label>
                                     <input autofocus type="text" class="form-control" name="nameLesson"
-                                        placeholder="Tên bài viết" value="" required minlength="2" maxlength="255">
+                                        placeholder="Tên bài giảng" value="" required minlength="2" maxlength="255">
 
                                 </div>
                             </div>
@@ -43,10 +43,10 @@
                             <div class="col-md-4">
                                 <div class="form-group has-feedback">
                                     <label for="sel1">Tên giáo viên</label>
-                                    <select class="form-control" name="sel">
+                                    <select class="form-control" name="selTeacher">
                                         <option value=''>-</option>
                                         @foreach($teacher as $data)
-                                        <option value="{{$data->name}}">{{$data->name}}</option>
+                                        <option value="{{$data->id}}">{{$data->name}}</option>
                                         @endforeach
                                     </select>
 
@@ -56,8 +56,11 @@
                                 <div class="form-group has-feedback">
                                     <label for="sel1">Phân loại bài giảng</label>
 
-                                    <select class="form-control" name="sel">
+                                    <select class="form-control" name="selCate">
                                         <option value=''>-</option>
+                                        @foreach($category as $data)
+                                        <option value="{{$data->id}}">{{$data->name}}</option>
+                                        @endforeach
 
                                     </select>
 
@@ -67,10 +70,19 @@
                                 <div class="form-group has-feedback">
                                     <label for="sel1">Tên môn học</label>
 
-                                    <select class="form-control" name="sel">
+                                    <select class="form-control" name="selSubject">
                                         <option value=''>-</option>
-
+                                        @foreach($subject as $data)
+                                        <option value="{{$data->id}}">{{$data->name}}</option>
+                                        @endforeach
                                     </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group has-feedback">
+                                    <label for="sel1">Upload File</label>
+                                    <input type="file" name="fileLesson" required="true">
 
                                 </div>
                             </div>
@@ -82,7 +94,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="/articles" class="btn btn-default">Hủy bỏ</a>
+                        <a href="/lesson" class="btn btn-default">Hủy bỏ</a>
                         <button type="submit" class="btn btn-info pull-right"><i
                                 class="fa fa-refresh fa-plus-circle"></i> Thêm mới </button>
 

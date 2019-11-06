@@ -50,3 +50,5 @@ Route::get('/topEvent', 'Backend\EventController@listTopEvent');
 Route::get('/tuyenDung', 'ArticleController@getArticleTuyenDungHome');
 
 Route::get('/diemDanh/{msv}/{class_id}', 'Backend\StudentAttendanceController@attendanceFrontEnd');
+//bai giang
+Route::get('/filterLesson/{id}', 'LessonController@filterLesson');

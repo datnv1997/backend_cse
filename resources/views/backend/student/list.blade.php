@@ -77,11 +77,14 @@
 
                                     <td>
 
-                                        <!-- <div class="btn-group">
-                                            <a title="Edit" href="{{URL::route('student.edit',$info->id)}}"
-                                                class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
-                                            </a>
-                                        </div> -->
+                                        <div class="btn-group">
+                                            <form method="POST" action="#">
+                                                @csrf
+                                                <button title="Edit" type="submit" class="btn btn-info btn-sm"><i
+                                                        class="fa fa-edit"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                         <!-- todo: have problem in mobile device -->
                                         <div class="btn-group">
                                             <form class="myAction" method="POST"

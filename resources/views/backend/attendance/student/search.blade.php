@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Student Attendance @endsection
+@section('pageTitle') Điểm danh @endsection
 <!-- End block -->
 
 
@@ -11,14 +11,9 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Student Attendance
-        <small>List</small>
+        Xem Điểm danh
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><i class="fa icon-attendance"></i> Attendance</li>
-        <li class="active">Student</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -32,12 +27,64 @@
                         <div class="col-md-3">
                             <div class="form-group has-feedback">
 
+                                <select class="form-control" id="selYear" name="selYear">
+
+                                    <option value=''>năm học:</option>
+                                    @foreach($year as $data )
+                                    <option value="{{$data->id}}">{{$data->title}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group has-feedback">
+
+                                <select class="form-control" id="selSemester" name="selSemester">
+
+                                    <option>Học kì:</option>
+                                    @foreach($semester as $data )
+                                    <option value="{{$data->id}}">{{$data->name}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group has-feedback">
+
+                                <select class="form-control" id="selPhase" name="selPhase">
+
+                                    <option>Chọn giai đoạn:</option>
+                                    @foreach($phase as $data )
+                                    <option value="{{$data->id}}">{{$data->name}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group has-feedback">
+
+                                <select class="form-control" id="selSubject" name="selSubject">
+
+                                    <option>Chọn môn học:</option>
+                                    @foreach($subject as $data )
+                                    <option value="{{$data->id}}">{{$data->name}}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group has-feedback">
+
                                 <select class="form-control" id="sel1" name="sel1">
 
                                     <option>Chọn lớp học phần:</option>
-                                    @foreach($iClass as $data )
-                                    <option value="{{$data->id}}">{{$data->name}}</option>
-                                    @endforeach
+
+                                    <!-- <option value="tes">tesst</option> -->
+
                                 </select>
 
                             </div>
@@ -105,6 +152,26 @@
 <!-- BEGIN PAGE JS-->
 @section('extraScript')
 <script type="text/javascript">
+// console.log($("#sel1"));
+console.log(@json($iClass));
+console.log(@json(App\ IClass::all()));
+// console.log(class);
+$("#selSubject").change(function() {
+    var year = $("#selYear").val();
+    var semester = $("#selSemester").val();
+    var phase = $("#selPhase").val();
+    var subject = $("#selSubject").val();
+    if (year != '' && subject != '' && semester != '' && phase != '') {
+        @json($iClass).forEach(e => {
+
+            $("#sel1").append(`<option value="${e.id}">${e.name}</option>`)
+        });
+    }
+    // var year=$("#selYear").val();
+    // var year=$("#selYear").val();
+})
+</script>
+<script type="text/javascript">
 $(document).ready(function() {
     // $('#attendance_list_filter').datepicker();
     window.postUrl = '{{URL::Route("student_attendance.status", 0)}}';
@@ -117,5 +184,6 @@ $(document).ready(function() {
         'select[name="section_id"] option[selected]').text() + ')');
 });
 </script>
+
 @endsection
 <!-- END PAGE JS-->

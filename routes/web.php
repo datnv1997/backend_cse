@@ -65,8 +65,10 @@ Route::post('/searchReport', 'ReportController@search')->name('searchReport');
 Route::get('/report/{id}', 'ReportController@result')->name('result');
 
 //lesson
-Route::get('/lesson', 'LessonController@index')->name('lesson');
+Route::get('/listLesson', 'LessonController@index');
 Route::get('/formAddLesson', 'LessonController@formAddLesson');
+Route::post('/addLesson', 'LessonController@addLesson');
+Route::post('/delLesson/{id}', 'LessonController@destroy');
 
 // Route::get('/categories', 'CategoryController@index')->name('user.categories');
 

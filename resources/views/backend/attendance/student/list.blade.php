@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Student Attendance @endsection
+@section('pageTitle') Điểm danh sinh viên @endsection
 <!-- End block -->
 
 

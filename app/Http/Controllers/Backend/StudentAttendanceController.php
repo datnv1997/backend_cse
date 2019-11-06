@@ -8,9 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\AppHelper;
 use App\IClass;
 use App\Jobs\PushStudentAbsentJob;
+use App\Phase;
 use App\Registration;
+use App\Semester;
 use App\Student;
 use App\StudentAttendance;
+use App\Subject;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -83,10 +86,14 @@ class StudentAttendanceController extends Controller
     public function index()
     {
         $iClass = iClass::all();
+        $year = AcademicYear::all();
+        $phase = Phase::all();
+        $semester = Semester::all();
+        $subject = Subject::all();
         $dateNow = Carbon::now();
         $formatDate = $dateNow->format('d-m-y');
         return view('backend.attendance.student.search', compact(
-            'iClass', 'formatDate'
+            'iClass', 'formatDate', 'year', 'phase', 'semester', 'subject'
         ));
 
     }

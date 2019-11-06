@@ -44,8 +44,8 @@
                         </div>
                     </div>
                     <div class="box-tools pull-right">
-                        <a class="btn btn-info btn-sm" href="{{ URL::route('user.addArticle') }}"><i
-                                class="fa fa-plus-circle"></i> Thêm mới</a>
+                        <a class="btn btn-info btn-sm" href="/formAddLesson"><i class="fa fa-plus-circle"></i> Thêm
+                            mới</a>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -69,34 +69,35 @@
                             </thead>
                             <tbody>
                                 @foreach($lesson as $data)
-                                <td>{{$data->id}}</td>
-                                <td>{{$data->name}}</td>
-                                <td>{{$data->nameTeacher}}</td>
-                                <td>{{$data->categoryLesson}}</td>
-                                <td>{{$data->subject}}</td>
-                                <td>{{$data->createdDate}}</td>
-                                <td>{{$data->detail}}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <form method="POST" action="{{url('/editArticles/'.$data->id)}}">
-                                            @csrf
-                                            <button title="Edit" type="submit" class="btn btn-info btn-sm"><i
-                                                    class="fa fa-edit"></i>
-                                            </button>
-                                        </form>
-                                    </div>
+                                <tr>
+                                    <td>{{$data->id}}</td>
+                                    <td>{{$data->name}}</td>
+                                    <td>{{$data->nameTeacher}}</td>
+                                    <td>{{$data->nameCategory}}</td>
+                                    <td>{{$data->nameSubject}}</td>
+                                    <td>{{$data->createdDate}}</td>
+                                    <td><a href="{{$data->detail}}">tải về</a></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <form method="POST" action="#">
+                                                @csrf
+                                                <button title="Edit" type="submit" class="btn btn-info btn-sm"><i
+                                                        class="fa fa-edit"></i>
+                                                </button>
+                                            </form>
+                                        </div>
 
-                                    <div class="btn-group">
-                                        <form class="myAction" method="POST"
-                                            action="{{url('/delArticles/'.$data->id)}}">
-                                            @csrf
-                                            <!-- <input name="_method" type="hidden" value="DELETE"> -->
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                                <i class="fa fa-fw fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                        <div class="btn-group">
+                                            <form class="myAction" method="POST" action="/delLesson/{{$data->id}}">
+                                                @csrf
+                                                <!-- <input name="_method" type="hidden" value="DELETE"> -->
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                    <i class="fa fa-fw fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @endforeach
                             </tbody>
 

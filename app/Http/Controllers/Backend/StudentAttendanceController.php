@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentAttendanceController extends Controller
 {
-    public $classId = '';
+    // public $classId = '';
     /**
      * Display a listing of the resource.
      *
@@ -32,50 +32,50 @@ class StudentAttendanceController extends Controller
      */
     public function searchAndCreateAttendance(Request $request)
     {
-        $classId = $request->input('class_id');
+        $classId = $request->input('sel1');
 
         return redirect('/student-attendance/check/' . $classId);
+    }
+    public function fullSearchParamAttendance($year, $semester, $phase, $subject)
+    {
+        $data = IClass::select('*')->where("idYear", $year)->where('idSemester', $semester)->where('idPhase', $phase)->where('idSubject', $subject)->get();
+        // dd($data);
+        return $data;
     }
     public function seachAttendance(Request $request)
     {
         $date = $request->input('attendance_date');
         $splitDate = explode('/', $date, 3);
         $collection = collect($splitDate);
-        $joinDate = $collection->implode('-');
+        $FromDate = $collection->implode('-');
+        $toDate = Carbon::now()->format('Y-m-d');
 
         $class = $request->input('sel1');
-        return redirect('/student-attendance/search/' . $class . '/' . $joinDate);
+        return redirect('/student-attendance/search/' . $class . '/' . $FromDate . '/' . $toDate);
 
     }
 
-    public function seachParamAttendance($class, $date)
+    public function seachParamAttendance($class, $fromDate, $toDate)
     {
         // echo $date;
-        $newformat = new DateTime($date);
+        $newformat = new DateTime($fromDate);
         $formatDate = $newformat->format('Y-m-d');
-        $student = StudentAttendance::where('class_id', $class)->where('attendance_date', $formatDate)->get();
+
+        $student = StudentAttendance::where('class_id', $class)->whereBetween('attendance_date', [$formatDate, $toDate])->get();
+        // dd($student);
+
         $arrayName = [];
         $tempStudent = Student::select('id', 'name')->get();
-        $tempId = [];
-        foreach ($student as $data) {
-            // dd(gettype($data));
-            array_push($tempId, $data->student_id);
-        }
 
-        $tempNameStudent = [];
-        foreach ($tempStudent as $data) {
-            if (in_array($data->id, $tempId)) {
-                array_push($tempNameStudent, $data->name);
-            }
-
-        }
         foreach ($student as $key => $data) {
-            if (count($tempNameStudent) > $key) {
-                $data->name = $tempNameStudent[$key];
-            }
+            // dd(gettype($data));
+            // array_push($tempId, $data->student_id);
+            $nameStudent = Student::select('name')->where('id', $data->student_id)->get();
+            $student[$key]['nameStudent'] = $nameStudent[0]->name;
         }
-        // dd($student);
-        $iClass = IClass::all();
+
+        $iClass = IClass::select('*')->where('id', $class)->get();
+        $iClass = $iClass[0];
         return view('backend.attendance.student.list', compact(
             'student',
             'iClass',
@@ -97,12 +97,12 @@ class StudentAttendanceController extends Controller
         ));
 
     }
-    public function checkStudent($class_id)
+    public function checkStudent($classId)
     {
-        $this->classId = $class_id;
+        // $this->classId = $class_id;
         // echo $this->classId;
-        $students = Student::all()->where('class_id', $class_id);
-        $class = IClass::find($class_id);
+        $students = Student::all()->where('class_id', $classId);
+        $class = IClass::find($classId);
 
         // $students = StudentAttendance::all()->where('class_id', $class_id);
 
@@ -200,65 +200,60 @@ class StudentAttendanceController extends Controller
         $section_id = null;
         $sendNotification = 0;
 
-        if ($request->isMethod('post')) {
+        // if ($request->isMethod('post')) {
 
-            if (AppHelper::getInstituteCategory() == 'college') {
-                $acYear = $request->get('academic_year', 0);
-            } else {
-                $acYear = AppHelper::getAcademicYear();
-            }
-            $class_id = $request->get('class_id', 0);
-            // $section_id = $request->get('section_id', 0);
-            $attendance_date = $request->get('attendance_date', '');
+        //     if (AppHelper::getInstituteCategory() == 'college') {
+        //         $acYear = $request->get('academic_year', 0);
+        //     } else {
+        //         $acYear = AppHelper::getAcademicYear();
+        //     }
+        //     $class_id = $request->get('class_id', 0);
+        //     // $section_id = $request->get('section_id', 0);
+        //     $attendance_date = $request->get('attendance_date', '');
 
-            $attendances = $this->getAttendanceByFilters($class_id, $acYear, $attendance_date, true);
-            if ($attendances) {
-                return redirect()->route('student_attendance.create')->with("error", "Attendance already exists!");
-            }
+        //     $attendances = $this->getAttendanceByFilters($class_id, $acYear, $attendance_date, true);
+        //     if ($attendances) {
+        //         return redirect()->route('student_attendance.create')->with("error", "Attendance already exists!");
+        //     }
 
-            $students = Registration::with(['info' => function ($query) {
-                $query->select('name', 'id');
-            }])->where('academic_year_id', $acYear)
-                ->where('class_id', $class_id)
-                ->select('regi_no', 'roll_no', 'id', 'student_id')
-                ->orderBy('roll_no', 'asc')
-                ->get();
+        //     $students = Registration::with(['info' => function ($query) {
+        //         $query->select('name', 'id');
+        //     }])->where('academic_year_id', $acYear)
+        //         ->where('class_id', $class_id)
+        //         ->select('regi_no', 'roll_no', 'id', 'student_id')
+        //         ->orderBy('roll_no', 'asc')
+        //         ->get();
 
-            $classInfo = IClass::where('status', AppHelper::ACTIVE)
-                ->where('id', $class_id)
-                ->first();
-            $class_name = $classInfo->name;
+        //     $classInfo = IClass::where('status', AppHelper::ACTIVE)
+        //         ->where('id', $class_id)
+        //         ->first();
+        //     $class_name = $classInfo->name;
 
-            if (AppHelper::getInstituteCategory() == 'college') {
-                $acYearInfo = AcademicYear::where('status', '1')->where('id', $acYear)->first();
-                $academic_year = $acYearInfo->title;
-            }
+        //     if (AppHelper::getInstituteCategory() == 'college') {
+        //         $acYearInfo = AcademicYear::where('status', '1')->where('id', $acYear)->first();
+        //         $academic_year = $acYearInfo->title;
+        //     }
 
-            $sendNotification = AppHelper::getAppSettings('student_attendance_notification');
-        }
+        //     $sendNotification = AppHelper::getAppSettings('student_attendance_notification');
+        // }
 
-        $classes = IClass::where('status', AppHelper::ACTIVE)
-            ->orderBy('order', 'asc')
-            ->pluck('name', 'id');
+        // $classes = IClass::where('status', AppHelper::ACTIVE)
+        //     ->orderBy('order', 'asc')
+        //     ->pluck('name', 'id');
 
-        //if its college then have to get those academic years
-        if (AppHelper::getInstituteCategory() == 'college') {
-            $academic_years = AcademicYear::where('status', '1')->orderBy('id', 'desc')->pluck('title', 'id');
-        }
-
+        // //if its college then have to get those academic years
+        // if (AppHelper::getInstituteCategory() == 'college') {
+        //     $academic_years = AcademicYear::where('status', '1')->orderBy('id', 'desc')->pluck('title', 'id');
+        // }
+        $iClass = iClass::all();
+        $year = AcademicYear::all();
+        $phase = Phase::all();
+        $semester = Semester::all();
+        $subject = Subject::all();
+        $dateNow = Carbon::now();
+        $formatDate = $dateNow->format('d-m-y');
         return view('backend.attendance.student.add', compact(
-            'academic_years',
-            'classes',
-            //'sectionsInfo',
-            'students',
-            'class_name',
-            'academic_year',
-            'section_name',
-            'attendance_date',
-            'class_id',
-            'section_id',
-            'acYear',
-            'sendNotification'
+            'iClass', 'year', 'phase', 'semester', 'subject', 'formatDate', 'dateNow'
         ));
 
     }

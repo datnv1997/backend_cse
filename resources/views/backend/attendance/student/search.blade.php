@@ -91,13 +91,15 @@
                         </div>
 
 
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group has-feedback">
-
+                                <label>Từ </label>
                                 <input type='text' readonly class="form-control date_picker" id="attendance_list_filter"
                                     name="attendance_date" placeholder="date" required value="{{$formatDate}}"
-                                    minlength="10" maxlength="11" />
-                                <span class="fa fa-calendar form-control-feedback"></span>
+                                    minlength="10" maxlength="11"
+                                    style="display:inline-block;width:60%;margin-left:5px;margin-right:5px" />
+                                <label> đến nay</label>
+                                <!-- <span class="fa fa-calendar form-control-feedback"></span> -->
 
                             </div>
                         </div>
@@ -109,9 +111,9 @@
                         </div>
                         <div class="box-tools pull-right">
 
-                            <a class="btn btn-info btn-sm" href="/student-attendance/create"><i
+                            <!-- <a class="btn btn-info btn-sm" href="/student-attendance/create"><i
                                     class="fa fa-plus-circle"></i> Điểm
-                                Danh</a>
+                                Danh</a> -->
                             <!-- <button class="btn btn-info btn-sm" type="submit"><i class="fa fa-search"></i> Điểm Danh</button> -->
 
                         </div>
@@ -145,6 +147,26 @@
     </div>
 
 </section>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" style="z-index:9999">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thông báo</h4>
+            </div>
+            <div class="modal-body">
+                <p>Mời nhập thông tin đầy đủ để hiện lớp học phần.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 <!-- /.content -->
 @endsection
 <!-- END PAGE CONTENT-->
@@ -153,22 +175,49 @@
 @section('extraScript')
 <script type="text/javascript">
 // console.log($("#sel1"));
-console.log(@json($iClass));
-console.log(@json(App\ IClass::all()));
+
+
+$("#sel1").click(function() {
+    var year = $("#selYear").val();
+    var semester = $("#selSemester").val();
+    var phase = $("#selPhase").val();
+    var subject = $("#selSubject").val();
+    if (year == '' || subject == '' || semester == '' || phase == '') {
+        // alert("Xin nhập thông tin đầy đủ");
+        $("#myModal").modal();
+    }
+})
+
 // console.log(class);
 $("#selSubject").change(function() {
+    // alert("hêllo")
+    $("#sel1 option").nextAll().remove();
     var year = $("#selYear").val();
     var semester = $("#selSemester").val();
     var phase = $("#selPhase").val();
     var subject = $("#selSubject").val();
     if (year != '' && subject != '' && semester != '' && phase != '') {
-        @json($iClass).forEach(e => {
-
-            $("#sel1").append(`<option value="${e.id}">${e.name}</option>`)
-        });
+        $.ajax({
+            url: `/student-attendance/fullSearch/${year}/${semester}/${phase}/${subject}`,
+            contentType: 'application/json',
+            processData: false,
+            dataType: 'json',
+            type: 'get',
+            async: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(res) {
+                res.forEach(element => {
+                    $("#sel1").append(
+                        `<option value="${element.id}">${element.name}</option>`)
+                });
+            },
+            error: function(err) {
+                console.log(err);
+            },
+        })
     }
-    // var year=$("#selYear").val();
-    // var year=$("#selYear").val();
 })
 </script>
 <script type="text/javascript">

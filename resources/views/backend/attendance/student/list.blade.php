@@ -27,45 +27,26 @@
         <div class="col-md-12">
             <div class="box box-info">
                 <div class="box-header">
-                    <form action="{{url('/student-attendance/search')}}" method="Post">
-                        @csrf
-                        <div class="col-md-3">
-                            <div class="form-group has-feedback">
 
-                                <select class="form-control" id="sel1" name="sel1">
+                    <div class="row">
 
-                                    <option>Select list:</option>
-                                    @foreach($iClass as $data )
-                                    <option value="{{$data->id}}">{{$data->name}}</option>
-                                    @endforeach
-                                </select>
+                        <div class="col-md-5">
+                            <div class="box-tools pull-left">
 
+                                <a class="btn btn-info btn-sm" href="/student-attendance"><i
+                                        class="fa fa-arrow-back"></i> Quay lại</a>
                             </div>
+
+
                         </div>
-
-
-                        <div class="col-md-2">
-                            <div class="form-group has-feedback">
-
-                                <input type='text' readonly class="form-control date_picker" id="attendance_list_filter"
-                                    name="attendance_date" placeholder="date" required value="{{$formatDate}}"
-                                    minlength="10" maxlength="11" />
-                                <span class="fa fa-calendar form-control-feedback"></span>
-
-                            </div>
+                    </div>
+                    <div class="row" style="display:flex;justify-content:center">
+                        <div class="col-md-12 text-center">
+                            <h4>Tên lớp học phần:{{$iClass->name}}</h4>
+                            <p>Mã lớp học phần:{{$iClass->id}}</p>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group has-feedback">
-                                <button class="btn btn-info btn-sm" type="submit"><i class="fa fa-search"></i> Tìm
-                                    kiếm</button>
-                            </div>
-                        </div>
-                        <div class="box-tools pull-right">
+                    </div>
 
-                            <a class="btn btn-info btn-sm" href="/student-attendance/create"><i
-                                    class="fa fa-plus-circle"></i> Điểm
-                                Danh</a>
-                        </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -88,7 +69,7 @@
                                 <tr>
                                     <td>{{$key}}</td>
                                     <td>{{$data->student_id}}</td>
-                                    <td>{{$data->name}}</td>
+                                    <td>{{$data->nameStudent}}</td>
                                     <td>{{$data->attendance_date}}</td>
                                     <td>{{$data->present}}</td>
                                 </tr>

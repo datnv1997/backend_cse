@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Student Attendance @endsection
+@section('pageTitle') Sinh viên @endsection
 <!-- End block -->
 
 <!-- BEGIN PAGE CONTENT-->
@@ -13,12 +13,7 @@
         Điểm danh
         <small>Thêm mới</small>
     </h1>
-    <ol class="breadcrumb">
-        <li><a><i class="fa fa-dashboard"></i> Trang chủ</a></li>
-        <li><i class="fa icon-attendance"></i> Điểm danh</li>
-        <li><a><i class="fa icon-student"></i>Sinh viên</a></li>
-        <li class="active">Add</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -28,13 +23,15 @@
             <div class="box box-info">
                 <div class="box-body">
 
-                    <p class="lead section-title-top-zero">Chọn lớp học phần:</p>
+                    <p class="lead ">Thông tin lớp học phần lớp học phần:</p>
+                    <p>Tên lớp học phần:{{$class->name}}</p>
+                    <p>Mã lớp học phần:{{$class->id}}</p>
                     <div class="container" style="width:100%">
                         <div class="row">
                             <form novalidate id="entryForm" action="{{URL::Route('student_attendance.createDiemDanh')}}"
                                 method="post" enctype="multipart/form-data">
                                 @csrf
-                                <div class="container" style="padding-left:0">
+                                <div class="container" style="padding-left:0;display:none">
                                     <div class="col-md-6" style="padding-left:0">
                                         <div class="form-group">
                                             <label for="sel1">Lớp:</label>
@@ -50,7 +47,7 @@
                                 <div class="row">
 
 
-                                    <p class="lead section-title-top-zero p-5" style="padding-left:15px">Danh sách sinh
+                                    <p class="lead  p-5" style="padding-left:15px">Danh sách sinh
                                         viên:
                                     </p>
                                     <div class="col-md-12">
@@ -100,7 +97,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <a href="/student-attendance" class="btn btn-default">Cancel</a>
+                    <a href="/student-attendance" class="btn btn-default">Quay lại</a>
                 </div>
             </div>
         </div>

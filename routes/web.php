@@ -296,8 +296,10 @@ Route::group(
         Route::post('student-attendance/status/{id}', 'StudentAttendanceController@changeStatus')
             ->name('student_attendance.status');
         Route::post('student-attendance/search', 'StudentAttendanceController@seachAttendance')->name('student_attendance.search');
-        Route::post('student-attendance/searchsearchAndCreateAttendance', 'StudentAttendanceController@searchAndCreateAttendance')->name('student_attendance.searchAndCreateAttendance');
-        Route::get('student-attendance/search/{class}/{date}', 'StudentAttendanceController@seachParamAttendance')->name('student_attendance.seachParam');
+        Route::post('student-attendance/searchAndCreateAttendance', 'StudentAttendanceController@searchAndCreateAttendance')->name('student_attendance.searchAndCreateAttendance');
+        Route::get('student-attendance/search/{class}/{fromDate}/{toDate}', 'StudentAttendanceController@seachParamAttendance')->name('student_attendance.seachParam');
+        Route::get('student-attendance/fullSearch/{year}/{semester}/{phase}/{subject}', 'StudentAttendanceController@fullSearchParamAttendance')->name('student_attendance.fullSeachParamAttendance');
+
         // Route::any('student-attendance/file-upload', 'StudentAttendanceController@createFromFile')
         //     ->name('student_attendance.create_file');
         // Route::get('student-attendance/file-queue-status', 'StudentAttendanceController@fileQueueStatus')

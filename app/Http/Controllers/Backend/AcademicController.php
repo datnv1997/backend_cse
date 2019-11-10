@@ -7,8 +7,10 @@ use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\AppHelper;
 use App\IClass;
+use App\Phase;
 use App\Registration;
 use App\Section;
+use App\Semester;
 use App\Subject;
 use App\User;
 use Illuminate\Http\Request;
@@ -49,7 +51,7 @@ class AcademicController extends Controller
         }
 
         //for get request
-        $iclasses = IClass::select('id', 'name', 'numeric_value', 'order', 'status', 'note', 'idSubject')->orderBy('order', 'asc')->get();
+        $iclasses = IClass::select('*')->orderBy('order', 'asc')->get();
 
         return view('backend.academic.iclass.list', compact('iclasses'));
     }
@@ -62,16 +64,14 @@ class AcademicController extends Controller
     {
         //for save on POST request
         if ($request->isMethod('post')) {
-            ;
+
             $this->validate($request, [
                 'name' => 'required|min:2|max:255',
-                'numeric_value' => 'required|integer',
-                'order' => 'required|integer',
-                'note' => 'max:500',
+
             ]);
 
             $data = $request->all();
-
+            // dd($data);
             if (!$id) {
                 $data['status'] = AppHelper::ACTIVE;
 
@@ -102,10 +102,12 @@ class AcademicController extends Controller
 
         //for get request
         $iclass = IClass::find($id);
-        $subject = Subject::all();
         $academyYear = AcademicYear::all();
+        $phase = Phase::all();
+        $semester = Semester::all();
+        $subject = Subject::all();
         // dd($academyYear);
-        return view('backend.academic.iclass.add', compact('iclass', 'subject', 'academyYear'));
+        return view('backend.academic.iclass.add', compact('iclass', 'subject', 'academyYear', 'phase', 'semester'));
     }
 
     /**

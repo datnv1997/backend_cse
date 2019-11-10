@@ -42,7 +42,7 @@
 
                                     <select class="form-control" id="selYear" name="selYear">
 
-                                        <option value=''>năm học:</option>
+                                        <option value=''>Năm học:</option>
                                         @foreach($year as $data )
                                         <option value="{{$data->id}}">{{$data->title}}</option>
                                         @endforeach

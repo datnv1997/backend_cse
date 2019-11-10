@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Class @endsection
+@section('pageTitle') Lớp học phần @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -14,13 +14,10 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Class
-        <small>List</small>
+
+        <small>Danh sách</small>
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Class</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -31,7 +28,7 @@
                 <div class="box-header">
                     <div class="box-tools pull-right">
                         <a class="btn btn-info btn-sm" href="{{ URL::route('academic.class_create') }}"><i
-                                class="fa fa-plus-circle"></i> Add New</a>
+                                class="fa fa-plus-circle"></i> Thêm mới</a>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -43,13 +40,14 @@
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="25%">Name</th>
-                                    <th width="5%">Numeric Value</th>
-                                    <th width="10%">Order Sequence</th>
-                                    <th width="10%">idSubject</th>
-                                    <th width="25%">Note</th>
-                                    <th width="10%">Status</th>
-                                    <th class="notexport" width="10%">Action</th>
+                                    <th width="15%">Tên lớp học phần</th>
+                                    <th width="15%">mã năm học</th>
+                                    <th width="15%">mã học kì</th>
+                                    <th width="15%">mã giai đoạn</th>
+                                    <th width="15%">mã lớp học</th>
+                                    <th width="5%">Ghi chú</th>
+                                    <!-- <th width="10%">Status</th> -->
+                                    <th class="notexport" width="10%">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,17 +57,12 @@
                                         {{$loop->iteration}}
                                     </td>
                                     <td>{{ $iclass->name }}</td>
-                                    <td>{{ $iclass->numeric_value }}</td>
-                                    <td>{{ $iclass->order }}</td>
+                                    <td>{{ $iclass->idYear }}</td>
+                                    <td>{{ $iclass->idSemester }}</td>
+                                    <td>{{ $iclass->idPhase }}</td>
                                     <td>{{ $iclass->idSubject }}</td>
                                     <td>{{ $iclass->note }}</td>
-                                    <td>
-                                        <!-- todo: have problem in mobile device -->
-                                        <input class="statusChange" type="checkbox" data-pk="{{$iclass->id}}"
-                                            @if($iclass->status) checked @endif data-toggle="toggle" data-on="<i
-                                            class='fa fa-check-circle'></i>" data-off="<i class='fa fa-ban'></i>"
-                                        data-onstyle="success" data-offstyle="danger">
-                                    </td>
+
                                     <td>
                                         <div class="btn-group">
                                             <a title="Edit" href="{{URL::route('academic.class_edit',$iclass->id)}}"
@@ -93,18 +86,7 @@
                                 @endforeach
 
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th width="25%">Name</th>
-                                    <th width="5%">Numeric Value</th>
-                                    <th width="10%">Order Sequence</th>
-                                    <th width="10%">idSubject</th>
-                                    <th width="25%">Note</th>
-                                    <th width="10%">Status</th>
-                                    <th class="notexport" width="10%">Action</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                 </div>

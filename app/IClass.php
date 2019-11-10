@@ -2,15 +2,14 @@
 
 namespace App;
 
+use Hrshadhin\Userstamps\UserstampsTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Hrshadhin\Userstamps\UserstampsTrait;
 
 class IClass extends Model
 {
     use SoftDeletes;
     use UserstampsTrait;
-
 
     /**
      * The attributes that are mass assignable.
@@ -18,14 +17,18 @@ class IClass extends Model
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'numeric_value',
         'order',
         'group',
+        'idYear',
+        'idSemester',
+        'idSubject',
+        'idPhase',
         'status',
-        'note'
+        'note',
     ];
-
 
     public function section()
     {

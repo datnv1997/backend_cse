@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Class @endsection
+@section('pageTitle') Lớp học phần @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -32,16 +32,6 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="sel1">Khóa học</label>
-                                    <select class="form-control" id="sel1">
-                                        @foreach($academyYear as $data)
-                                        <option value={{$data->id}}>{{$data->title}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
                                 <div class="form-group has-feedback">
                                     <label for="name">Tên lớp<span class="text-danger">*</span></label>
                                     <input autofocus type="text" class="form-control" name="name" placeholder="name"
@@ -51,21 +41,47 @@
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="sel1">Khóa học</label>
+                                    <select class="form-control" name="idYear">
+                                        @foreach($academyYear as $data)
+                                        <option value={{$data->id}}>{{$data->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
                                 <div class="form-group has-feedback">
-                                    <label for="numeric_value">Số lượng<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="numeric_value" placeholder="1,2,3,5"
-                                        @if($iclass) readonly @endif
-                                        value="@if($iclass){{ $iclass->numeric_value }}@else{{ old('numeric_value') }} @endif"
-                                        required>
-                                    <span class="fa fa-sort-numeric-asc form-control-feedback"></span>
-                                    <span class="text-danger">{{ $errors->first('numeric_value') }}</span>
+                                    <label>Chọn học kỳ</label>
+                                    <select class="form-control" id="selSemester" name="idSemester">
+
+
+                                        @foreach($semester as $data )
+                                        <option value="{{$data->id}}">{{$data->name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group has-feedback">
+                                    <label>Chọn giai đoạn</label>
+                                    <select class="form-control" id="selPhase" name="idPhase">
+
+
+                                        @foreach($phase as $data )
+                                        <option value="{{$data->id}}">{{$data->name}}</option>
+                                        @endforeach
+                                    </select>
+
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="sel1">Môn học</label>
-                                    <select class="form-control" id="sel1">
+                                    <select class="form-control" name="idSubject">
                                         @foreach($subject as $data)
                                         <option value={{$data->id}}>{{$data->name}}</option>
                                         @endforeach
@@ -76,16 +92,7 @@
 
                         </div>
                         <div class="row">
-                            <div class="col-md-2">
-                                <div class="form-group has-feedback">
-                                    <label for="order">Thứ tự<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="order" placeholder="1,2,3,5"
-                                        value="@if($iclass){{ $iclass->order }}@else{{ old('order') }} @endif" min="0"
-                                        required>
-                                    <span class="fa fa-sort-numeric-asc form-control-feedback"></span>
-                                    <span class="text-danger">{{ $errors->first('order') }}</span>
-                                </div>
-                            </div>
+
                             <div class="col-md-10">
                                 <div class="form-group has-feedback">
                                     <label for="note">Ghi chú</label>
@@ -100,10 +107,10 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="{{URL::route('academic.class')}}" class="btn btn-default">Cancel</a>
+                        <a href="{{URL::route('academic.class')}}" class="btn btn-default">Hủy bỏ</a>
                         <button type="submit" class="btn btn-info pull-right"><i
                                 class="fa @if($iclass) fa-refresh @else fa-plus-circle @endif"></i> @if($iclass) Update
-                            @else Add @endif</button>
+                            @else Thêm mới @endif</button>
 
                     </div>
                 </form>

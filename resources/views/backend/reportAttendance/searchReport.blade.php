@@ -31,7 +31,7 @@
 
                                     <option>Chọn lớp học phần:</option>
                                     @foreach($class as $data)
-                                    <option value="{{$data->id}}">{{$data->id}}</option>
+                                    <option value="{{$data->id}}">{{$data->name}}</option>
                                     @endforeach
                                 </select>
 

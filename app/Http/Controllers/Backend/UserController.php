@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Backend;
 
 use App\AcademicYear;
 use App\Employee;
+use App\Http\Controllers\Controller;
+use App\Http\Helpers\AppHelper;
 use App\IClass;
 use App\Models\PasswordResets;
 use App\Permission;
-use App\Registration;
 use App\Role;
 use App\Section;
 use App\smsLog;
@@ -16,16 +17,14 @@ use App\Subject;
 use App\User;
 use App\UserRole;
 use Carbon\Carbon;
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Helpers\AppHelper;
 
 class UserController extends Controller
 {
@@ -36,14 +35,13 @@ class UserController extends Controller
         $this->hasher = $hasher;
     }
 
-
     /**
      * Handle an authentication attempt.
      *
      * @return Response
      */
     public function login()
-    {   
+    {
         return view('backend.user.login');
     }
 
@@ -60,14 +58,14 @@ class UserController extends Controller
         //validate form
         $this->validate(
             $request, [
-            'username' => 'required',
-            'password' => 'required',
+                'username' => 'required',
+                'password' => 'required',
             ]
         );
 
         $username = $request->get('username');
         $password = $request->get('password');
-        $remember=$request->has('remember');
+        $remember = $request->has('remember');
 
         if (Auth::attempt(['username' => $username, 'password' => $password, 'status' => AppHelper::ACTIVE], $remember)) {
             session(['user_session_sha1' => AppHelper::getUserSessionHash()]);
@@ -78,9 +76,9 @@ class UserController extends Controller
             $msgType = "success";
             $msg = "Welcome to admin panel.";
 
-            if(!count($appSettings)){
+            if (!count($appSettings)) {
                 $msgType = "warning";
-                $msg = "Please update institute information <a href='".route('settings.institute')."'> <b>Here</b></a>";
+                $msg = "Please update institute information <a href='" . route('settings.institute') . "'> <b>Here</b></a>";
             }
 
             return redirect()->intended('dashboard')->with($msgType, $msg);
@@ -89,16 +87,15 @@ class UserController extends Controller
         return redirect()->route('login')->with('error', 'Your email/password combination was incorrect OR account disabled!');
     }
 
-
     /**
      * Handle an user logout.
      *
      * @return Response
      */
     public function logout()
-    {     
+    {
         Auth::logout();
-        return redirect()->route('login')->with('success', 'Your are now logged out!');    
+        return redirect()->route('login')->with('success', 'Your are now logged out!');
     }
 
     /**
@@ -111,7 +108,7 @@ class UserController extends Controller
         $username = auth()->user()->username;
         $name = auth()->user()->name;
         Auth::logout();
-        return view('backend.user.lock', compact('username','name'));
+        return view('backend.user.lock', compact('username', 'name'));
     }
 
     /**
@@ -127,11 +124,11 @@ class UserController extends Controller
 
             $this->validate($request, [
                 'email' => 'required|email',
-                'captcha' => 'required|captcha'
+                'captcha' => 'required|captcha',
             ]);
 
             $user = User::where('email', $request->get('email'))->first();
-            if(!$user){
+            if (!$user) {
                 return redirect()->route('forgot')->with('error', 'Account not found on this system!');
             }
 
@@ -142,21 +139,17 @@ class UserController extends Controller
                 $request->only('email')
             );
 
-
-            if(Password::RESET_LINK_SENT){
+            if (Password::RESET_LINK_SENT) {
                 return redirect()->route('forgot')->with('success', 'A mail has been send to your e-mail address. Follow the given instruction to reset your password.');
 
             }
 
             return redirect()->route('forgot')->with('error', 'Password reset link could not send! Try again later or contact support.');
 
-
         }
-
 
         return view('backend.user.forgot');
     }
-
 
     /**
      * Get the broker to be used during password reset.
@@ -173,7 +166,6 @@ class UserController extends Controller
      *
      * @return Response
      */
-
 
     public function reset(Request $request, $token)
     {
@@ -192,12 +184,12 @@ class UserController extends Controller
             $email = $request->get('email');
             $password = $request->get('password');
             $reset = PasswordResets::where('email', $email)->first();
-            if($reset) {
+            if ($reset) {
                 //token expiration checking, allow 24 hrs only
-                $today =  Carbon::now(env('APP_TIMEZONE','Asia/Dhaka'));
+                $today = Carbon::now(env('APP_TIMEZONE', 'Asia/Dhaka'));
                 $createdDate = Carbon::parse($reset->created_at);
                 $hoursGone = $today->diffInHours($createdDate);
-                if($this->hasher->check($token, $reset->token) && $hoursGone <= 24) {
+                if ($this->hasher->check($token, $reset->token) && $hoursGone <= 24) {
                     $user = User::where('email', '=', $email)->first();
                     $user->password = bcrypt($password);
                     $user->save();
@@ -209,7 +201,6 @@ class UserController extends Controller
             }
 
             return redirect()->route('forgot')->with('error', 'User not found with this mail or token invalid or expired!');
-
 
         }
 
@@ -223,7 +214,7 @@ class UserController extends Controller
      */
     public function dashboard(Request $request)
     {
-        $userRoleId = session('user_role_id',0);
+        $userRoleId = session('user_role_id', 0);
         $teachers = 0;
         $employee = 0;
         $students = 0;
@@ -235,7 +226,7 @@ class UserController extends Controller
         $attendanceChartAbsentData = [];
 
         //only admin
-        if($userRoleId == AppHelper::USER_ADMIN){
+        if ($userRoleId == AppHelper::USER_ADMIN) {
             //these models records count
             [$teachers, $employee, $students, $subjects] = $this->getStatisticData();
             //sms chart data
@@ -243,14 +234,13 @@ class UserController extends Controller
         }
 
         //all user except students
-        if($userRoleId != AppHelper::USER_STUDENT) {
+        if ($userRoleId != AppHelper::USER_STUDENT) {
             //attendance chart data
             [$attendanceChartPresentData, $attendanceChartAbsentData] = $this->getClassWiseTodayAttendanceCount();
 
             $studentsCount = $this->getClassWiseStudentCount();
             $sectionStudentCount = $this->getSectionWiseStudentCountForSpecificClasses();
         }
-
 
         return view('backend.user.dashboard', compact(
             'teachers',
@@ -276,11 +266,9 @@ class UserController extends Controller
 
         $isPost = false;
 
-        $user = User::where('id',auth()->user()->id)->with('role')->first();
+        $user = User::where('id', auth()->user()->id)->with('role')->first();
 
-
-        $userRole = Role::where('id',$user->role->role_id)->first();
-
+        $userRole = Role::where('id', $user->role->role_id)->first();
 
         if ($request->isMethod('post')) {
             $isPost = true;
@@ -296,27 +284,27 @@ class UserController extends Controller
             $oldEmail = $user->email;
             $newUserName = $request->get('username');
             $newEmail = $request->get('email');
-            if($oldUsername != $newUserName){
-                $existUsers = User::where('username',$newUserName)->count();
-                if($existUsers){
+            if ($oldUsername != $newUserName) {
+                $existUsers = User::where('username', $newUserName)->count();
+                if ($existUsers) {
                     session()->flash('error', 'Username already exists for another account!');
                     $isExists = true;
                 }
 
             }
 
-            if($oldEmail != $newEmail){
-                $existUsers = User::where('email',$newEmail)->count();
-                if($existUsers){
+            if ($oldEmail != $newEmail) {
+                $existUsers = User::where('email', $newEmail)->count();
+                if ($existUsers) {
                     session()->flash('error', 'Email already exists for another account!');
                     $isExists = true;
                 }
 
             }
 
-            if(!$isExists){
+            if (!$isExists) {
                 $user->name = $request->get('name');
-                $user->phone_no = $request->get('phone_no','');
+                $user->phone_no = $request->get('phone_no', '');
                 $user->email = $newEmail;
                 $user->username = $newUserName;
                 $user->save();
@@ -327,7 +315,7 @@ class UserController extends Controller
 
         }
 
-        return view('backend.user.profile', compact('user','isPost', 'userRole'));
+        return view('backend.user.profile', compact('user', 'isPost', 'userRole'));
     }/**
 
 
@@ -350,7 +338,7 @@ class UserController extends Controller
             $user = auth()->user();
             //validate form
             $this->validate($request, [
-                'old_password' => 'required|min:6|max:50|old_password:'.$user->password,
+                'old_password' => 'required|min:6|max:50|old_password:' . $user->password,
                 'password' => 'required|confirmed|min:6|max:50',
             ], $messages);
 
@@ -359,11 +347,9 @@ class UserController extends Controller
             Auth::logout();
             return redirect()->route('login')->with('success', 'Password successfully change. Login now :)');
 
-
         }
         return view('backend.user.change_password');
     }
-
 
     /**
      * Display a listing of the resource.
@@ -373,16 +359,15 @@ class UserController extends Controller
     public function index()
     {
 
-         $users = User::rightJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
+        $users = User::rightJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->leftJoin('roles', 'user_roles.role_id', '=', 'roles.id')
             ->where('user_roles.role_id', '<>', AppHelper::USER_ADMIN)
-            ->select('users.*','roles.name as role')
+            ->select('users.*', 'roles.name as role')
             ->get();
 
         return view('backend.user.list', compact('users'));
 
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -394,9 +379,8 @@ class UserController extends Controller
         $roles = Role::where('id', '<>', AppHelper::USER_ADMIN)->pluck('name', 'id');
         $user = null;
         $role = null;
-        return view('backend.user.add', compact('roles','user', 'role'));
+        return view('backend.user.add', compact('roles', 'user', 'role'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -421,8 +405,8 @@ class UserController extends Controller
 
         $data = $request->all();
 
-        if($data['role_id'] == AppHelper::USER_ADMIN){
-            return redirect()->route('user.create')->with("error",'Do not mess with the system!!!');
+        if ($data['role_id'] == AppHelper::USER_ADMIN) {
+            return redirect()->route('user.create')->with("error", 'Do not mess with the system!!!');
 
         }
 
@@ -443,34 +427,29 @@ class UserController extends Controller
             UserRole::create(
                 [
                     'user_id' => $user->id,
-                    'role_id' => $data['role_id']
+                    'role_id' => $data['role_id'],
                 ]
             );
 
             DB::commit();
 
-
             //now notify the admins about this record
-             $msg = $data['name']." user added by ".auth()->user()->name;
-             $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
+            $msg = $data['name'] . " user added by " . auth()->user()->name;
+            $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
             // Notification end
 
             return redirect()->route('user.create')->with('success', 'User added!');
 
-
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
-            $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+            $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
             return $message;
-            return redirect()->route('user.create')->with("error",$message);
+            return redirect()->route('user.create')->with("error", $message);
         }
 
         return redirect()->route('user.create');
 
-
     }
-
 
     /**
      * Display the specified resource.
@@ -479,20 +458,19 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 //    public function show($id)
-//    {
-//        $user = User::rightJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
-//            ->where('user_roles.role_id', '<>', AppHelper::USER_ADMIN)
-//            ->where('users.id', $id)
-//            ->first();
-//        if(!$user){
-//            abort(404);
-//        }
-//
-//        return view('backend.user.view', compact('teacher'));
-//
-//
-//    }
-
+    //    {
+    //        $user = User::rightJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
+    //            ->where('user_roles.role_id', '<>', AppHelper::USER_ADMIN)
+    //            ->where('users.id', $id)
+    //            ->first();
+    //        if(!$user){
+    //            abort(404);
+    //        }
+    //
+    //        return view('backend.user.view', compact('teacher'));
+    //
+    //
+    //    }
 
     /**
      * Show the form for editing the specified resource.
@@ -506,21 +484,19 @@ class UserController extends Controller
         $user = User::rightJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->where('user_roles.role_id', '<>', AppHelper::USER_ADMIN)
             ->where('users.id', $id)
-            ->select('users.*','user_roles.role_id')
+            ->select('users.*', 'user_roles.role_id')
             ->first();
 
-        if(!$user){
+        if (!$user) {
             abort(404);
         }
-
 
         $roles = Role::where('id', '<>', AppHelper::USER_ADMIN)->pluck('name', 'id');
         $role = $user->role_id;
 
-        return view('backend.user.add', compact('user','roles','role'));
+        return view('backend.user.add', compact('user', 'roles', 'role'));
 
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -534,26 +510,25 @@ class UserController extends Controller
         $user = User::rightJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->where('user_roles.role_id', '<>', AppHelper::USER_ADMIN)
             ->where('users.id', $id)
-            ->select('users.*','user_roles.role_id')
+            ->select('users.*', 'user_roles.role_id')
             ->first();
 
-        if(!$user){
+        if (!$user) {
             abort(404);
         }
         //validate form
         $this->validate($request, [
-        'name' => 'required|min:5|max:255',
-        'email' => 'email|max:255|unique:users,email,'.$user->id,
-        'role_id' => 'required|numeric',
-         'phone_no' => 'nullable|max:15',
+            'name' => 'required|min:5|max:255',
+            'email' => 'email|max:255|unique:users,email,' . $user->id,
+            'role_id' => 'required|numeric',
+            'phone_no' => 'nullable|max:15',
 
         ]);
 
-        if($request->get('role_id') == AppHelper::USER_ADMIN){
-            return redirect()->route('user.index')->with("error",'Do not mess with the system!!!');
+        if ($request->get('role_id') == AppHelper::USER_ADMIN) {
+            return redirect()->route('user.index')->with("error", 'Do not mess with the system!!!');
 
         }
-
 
         $data['name'] = $request->get('name');
         $data['email'] = $request->get('email');
@@ -561,19 +536,17 @@ class UserController extends Controller
         $user->fill($data);
         $user->save();
 
-        if($user->role_id != $request->get('role_id')){
+        if ($user->role_id != $request->get('role_id')) {
             DB::table('user_roles')->where('user_id', $user->id)->update([
                 'role_id' => $request->get('role_id'),
                 'updated_at' => Carbon::now(),
-                'updated_by' => auth()->user()->id
+                'updated_by' => auth()->user()->id,
             ]);
         }
 
         return redirect()->route('user.index')->with('success', 'User updated!');
 
-
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -584,22 +557,22 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-         $user =  User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-         $userRole = UserRole::where('user_id', $user->id)->first();
+        $userRole = UserRole::where('user_id', $user->id)->first();
 
-         if($userRole && $userRole->role_id == AppHelper::USER_ADMIN){
-             return redirect()->route('user.index')->with('error', 'Don not mess with the system');
+        if ($userRole && $userRole->role_id == AppHelper::USER_ADMIN) {
+            return redirect()->route('user.index')->with('error', 'Don not mess with the system');
 
-         }
+        }
 
-         $message = "Something went wrong!";
+        $message = "Something went wrong!";
         DB::beginTransaction();
         try {
 
             DB::table('user_roles')->where('user_id', $user->id)->update([
                 'deleted_by' => auth()->user()->id,
-                'deleted_at' => Carbon::now()
+                'deleted_at' => Carbon::now(),
             ]);
 
             //delink related child record
@@ -612,26 +585,22 @@ class UserController extends Controller
             DB::commit();
 
             //now notify the admins about this record
-            $msg = $user->name." user deleted by ".auth()->user()->name;
+            $msg = $user->name . " user deleted by " . auth()->user()->name;
             $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
             // Notification end
 
             //flash this user permission cache
-            Cache::forget('permission'.auth()->user()->id);
-            Cache::forget('roles'.auth()->user()->id);
+            Cache::forget('permission' . auth()->user()->id);
+            Cache::forget('roles' . auth()->user()->id);
 
             return redirect()->route('user.index')->with('success', 'User deleted.');
 
-
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
-            $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+            $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
         }
 
-        return redirect()->route('user.index')->with("error",$message);
-
-
+        return redirect()->route('user.index')->with("error", $message);
 
     }
 
@@ -639,43 +608,42 @@ class UserController extends Controller
      * status change
      * @return mixed
      */
-    public function changeStatus(Request $request, $id=0)
+    public function changeStatus(Request $request, $id = 0)
     {
 
-        $user =  User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        if(!$user){
+        if (!$user) {
             return [
                 'success' => false,
-                'message' => 'Record not found!'
+                'message' => 'Record not found!',
             ];
         }
 
         $userRole = UserRole::where('user_id', $user->id)->first();
 
-        if($userRole && $userRole->role_id == AppHelper::USER_ADMIN){
+        if ($userRole && $userRole->role_id == AppHelper::USER_ADMIN) {
             return [
                 'success' => false,
-                'message' => 'Don not mess with the system!'
+                'message' => 'Don not mess with the system!',
             ];
 
         }
 
-        $user->status = (string)$request->get('status');
-        $user->force_logout = (int)$request->get('status') ? 0 : 1;
+        $user->status = (string) $request->get('status');
+        $user->force_logout = (int) $request->get('status') ? 0 : 1;
         $user->save();
 
         //flash this user permission cache
-        Cache::forget('permission'.auth()->user()->id);
-        Cache::forget('roles'.auth()->user()->id);
+        Cache::forget('permission' . auth()->user()->id);
+        Cache::forget('roles' . auth()->user()->id);
 
         return [
             'success' => true,
-            'message' => 'Status updated.'
+            'message' => 'Status updated.',
         ];
 
     }
-
 
     /**
      * update permission
@@ -683,10 +651,10 @@ class UserController extends Controller
      */
     public function updatePermission(Request $request, $id)
     {
-        $user =  User::findOrFail($id);
+        $user = User::findOrFail($id);
         $userRole = UserRole::where('user_id', $user->id)->first();
 
-        if($userRole && $userRole->role_id == AppHelper::USER_ADMIN){
+        if ($userRole && $userRole->role_id == AppHelper::USER_ADMIN) {
             return redirect()->route('user.index')->with('error', 'Don not mess with the system.');
 
         }
@@ -700,52 +668,46 @@ class UserController extends Controller
             DB::beginTransaction();
             try {
 
-            //now delete previous permissions
-            DB::table('users_permissions')->where('user_id', $user->id)->update([
-                'deleted_by' => auth()->user()->id,
-                'deleted_at' => Carbon::now()
-            ]);
+                //now delete previous permissions
+                DB::table('users_permissions')->where('user_id', $user->id)->update([
+                    'deleted_by' => auth()->user()->id,
+                    'deleted_at' => Carbon::now(),
+                ]);
 
-            //then insert new permissions
-            $userPermissions = $this->proccessInputPermissions($permissionList, 'user_id', $user->id, auth()->user()->id);
-            DB::table('users_permissions')->insert($userPermissions);
+                //then insert new permissions
+                $userPermissions = $this->proccessInputPermissions($permissionList, 'user_id', $user->id, auth()->user()->id);
+                DB::table('users_permissions')->insert($userPermissions);
 
-            DB::commit();
+                DB::commit();
 
                 //now notify the admins about this record
-                $msg = $user->name." user permission updated by ".auth()->user()->name;
+                $msg = $user->name . " user permission updated by " . auth()->user()->name;
                 $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
                 // Notification end
 
                 //flush the permission cache also other cache
                 Cache::flush();
 
-            return redirect()->route('user.index')->with('success', 'User Permission Updated.');
+                return redirect()->route('user.index')->with('success', 'User Permission Updated.');
 
-            }
-            catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollback();
-                $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+                $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
             }
 
             return redirect()->route('user.index')->with('error', $message);
         }
 
-
-
         $userPermissions = DB::table('users_permissions')->where('user_id', $user->id)
             ->whereNull('deleted_at')->pluck('permission_id')->toArray();
 
-        $permissions = Permission::select('id','name','group')->whereNotIn('group',['Admin Only','Common'])->orderBy('group','asc')->get();
+        $permissions = Permission::select('id', 'name', 'group')->whereNotIn('group', ['Admin Only', 'Common'])->orderBy('group', 'asc')->get();
 
         $permissionList = $this->formatPermissions($permissions, $userPermissions);
 
         return view('backend.user.permission', compact('permissionList', 'user'));
 
     }
-
-
-
 
     /**
      * role manage
@@ -762,19 +724,18 @@ class UserController extends Controller
                 'hiddenId' => 'required|integer',
             ]);
 
-            $id = $request->get('hiddenId',0);
+            $id = $request->get('hiddenId', 0);
             $role = Role::findOrFail($id);
 
-            if(!$role->deletable){
+            if (!$role->deletable) {
                 return redirect()->route('user.role_index')->with('error', 'You can\'t delete this role?');
             }
 
             //check if this role has active user
             $users = UserRole::where('role_id', $role->id)->count();
-            if($users){
+            if ($users) {
                 return redirect()->route('user.role_index')->with('error', 'Role has users, So can\'t delete it!');
             }
-
 
             $message = "Something went wrong!";
             DB::beginTransaction();
@@ -782,7 +743,7 @@ class UserController extends Controller
 
                 DB::table('roles_permissions')->where('role_id', $id)->update([
                     'deleted_by' => auth()->user()->id,
-                    'deleted_at' => Carbon::now()
+                    'deleted_at' => Carbon::now(),
                 ]);
 
                 $role->delete();
@@ -790,7 +751,7 @@ class UserController extends Controller
                 DB::commit();
 
                 //now notify the admins about this record
-                $msg = $role->name." role deleted by ".auth()->user()->name;
+                $msg = $role->name . " role deleted by " . auth()->user()->name;
                 $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
                 // Notification end
 
@@ -799,13 +760,10 @@ class UserController extends Controller
 
                 return redirect()->route('user.role_index')->with('success', 'Role deleted!');
 
-            }
-            catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollback();
-                $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+                $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
             }
-
-
 
             return redirect()->route('user.role_index')->with('error', $message);
         }
@@ -828,24 +786,22 @@ class UserController extends Controller
                 'name' => 'required|min:4|max:255|unique:roles',
             ]);
 
-
             $role = Role::create([
-                'name' => $request->get('name')
+                'name' => $request->get('name'),
             ]);
-
 
             $permissionList = $request->get('permissions');
 
-            if(count($permissionList)){
+            if (count($permissionList)) {
 
-                $rolePermissions = $this->proccessInputPermissions($permissionList,'role_id', $role->id, auth()->user()->id);
+                $rolePermissions = $this->proccessInputPermissions($permissionList, 'role_id', $role->id, auth()->user()->id);
 
                 DB::table('roles_permissions')->insert($rolePermissions);
 
             }
 
             //now notify the admins about this record
-            $msg = $request->get('name')." role created by ".auth()->user()->name;
+            $msg = $request->get('name') . " role created by " . auth()->user()->name;
             $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
             // Notification end
 
@@ -855,8 +811,7 @@ class UserController extends Controller
             return redirect()->route('user.role_index')->with('success', 'Role Created.');
         }
 
-
-       $permissions = Permission::select('id','name','group')->whereNotIn('group',['Admin Only','Common'])->orderBy('group','asc')->get();
+        $permissions = Permission::select('id', 'name', 'group')->whereNotIn('group', ['Admin Only', 'Common'])->orderBy('group', 'asc')->get();
 
         $permissionList = $this->formatPermissions($permissions);
         $role = null;
@@ -871,7 +826,7 @@ class UserController extends Controller
     public function roleUpdate(Request $request, $id)
     {
         //check if it is admin role then, reject from modify
-        if($id == AppHelper::USER_ADMIN){
+        if ($id == AppHelper::USER_ADMIN) {
             return redirect()->route('user.role_index')->with('error', 'Don not mess with the system');
         }
 
@@ -890,7 +845,7 @@ class UserController extends Controller
                 //now delete previous permissions
                 DB::table('roles_permissions')->where('role_id', $id)->update([
                     'deleted_by' => auth()->user()->id,
-                    'deleted_at' => Carbon::now()
+                    'deleted_at' => Carbon::now(),
                 ]);
 
                 //then insert new permissions
@@ -900,7 +855,7 @@ class UserController extends Controller
                 DB::commit();
 
                 //now notify the admins about this record
-                $msg = $role->name." role updated by ".auth()->user()->name;
+                $msg = $role->name . " role updated by " . auth()->user()->name;
                 $nothing = AppHelper::sendNotificationToAdmins('info', $msg);
                 // Notification end
 
@@ -909,44 +864,41 @@ class UserController extends Controller
 
                 return redirect()->route('user.role_index')->with('success', 'Role Permission Updated.');
 
-            }
-            catch(\Exception $e){
+            } catch (\Exception $e) {
                 DB::rollback();
-                $message = str_replace(array("\r", "\n","'","`"), ' ', $e->getMessage());
+                $message = str_replace(array("\r", "\n", "'", "`"), ' ', $e->getMessage());
             }
 
             return redirect()->route('user.role_index')->with('error', $message);
         }
 
-
-
         $rolePermissions = DB::table('roles_permissions')->where('role_id', $role->id)->whereNull('deleted_at')->pluck('permission_id')->toArray();
 
-        $permissions = Permission::select('id','name','group')->whereNotIn('group',['Admin Only','Common'])->orderBy('group','asc')->get();
+        $permissions = Permission::select('id', 'name', 'group')->whereNotIn('group', ['Admin Only', 'Common'])->orderBy('group', 'asc')->get();
 
         $permissionList = $this->formatPermissions($permissions, $rolePermissions);
 
         return view('backend.role.add', compact('permissionList', 'role'));
     }
 
-    private function formatPermissions($permissions, $rolePermissions=null){
+    private function formatPermissions($permissions, $rolePermissions = null)
+    {
         //now build the structure to view on blade
         //$permissionList[group_name][module_name][permission_verb][permission_ids]
         $permissionList = [];
 
-        foreach ($permissions as $permission){
+        foreach ($permissions as $permission) {
 
-            $namePart = preg_split("/\s+(?=\S*+$)/",$permission->name);
+            $namePart = preg_split("/\s+(?=\S*+$)/", $permission->name);
             $moduleName = $namePart[0];
             $verb = $namePart[1];
 
             $permissionList[$permission->group][$moduleName][$verb]['ids'][] = $permission->id;
 
-            if($rolePermissions){
+            if ($rolePermissions) {
                 $permissionList[$permission->group][$moduleName][$verb]['checked'] = in_array($permission->id, $rolePermissions) ? 1 : 0;
 
-            }
-            else{
+            } else {
                 $permissionList[$permission->group][$moduleName][$verb]['checked'] = 0;
 
             }
@@ -956,13 +908,14 @@ class UserController extends Controller
 
     }
 
-    private function proccessInputPermissions($permissionList, $type, $roleOrUserId, $loggedInUser){
+    private function proccessInputPermissions($permissionList, $type, $roleOrUserId, $loggedInUser)
+    {
 
         $rolePermissions = [];
 
-        $now = Carbon::now(env('APP_TIMEZONE','Asia/Dhaka'));
+        $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Dhaka'));
 
-        if(count($permissionList)) {
+        if (count($permissionList)) {
 
             foreach ($permissionList as $permissions) {
                 $permissions = explode(',', $permissions);
@@ -977,7 +930,6 @@ class UserController extends Controller
                     ];
                 }
             }
-
 
         }
 
@@ -997,155 +949,153 @@ class UserController extends Controller
         return $rolePermissions;
     }
 
-   /**
-    *  Dashboard data helper methods
-    */
-   private function getAcademicYearForDashboard() {
-       $academicYearId = 0;
-       if (AppHelper::getInstituteCategory() == 'college') {
-           $academicYearInfo = AcademicYear::where('status', AppHelper::ACTIVE)
-               ->where('title', env('DASHBOARD_STUDENT_COUNT_DEFAULT_ACADEMIC_YEAR',date('Y')))->first();
-           if ($academicYearInfo) {
-               $academicYearId = $academicYearInfo->id;
-           }
-       } else {
-           $academicYearId = AppHelper::getAcademicYear();
-       }
+    /**
+     *  Dashboard data helper methods
+     */
+    private function getAcademicYearForDashboard()
+    {
+        $academicYearId = 0;
+        if (AppHelper::getInstituteCategory() == 'college') {
+            $academicYearInfo = AcademicYear::where('status', AppHelper::ACTIVE)
+                ->where('title', env('DASHBOARD_STUDENT_COUNT_DEFAULT_ACADEMIC_YEAR', date('Y')))->first();
+            if ($academicYearInfo) {
+                $academicYearId = $academicYearInfo->id;
+            }
+        } else {
+            $academicYearId = AppHelper::getAcademicYear();
+        }
 
-       return $academicYearId;
-   }
+        return $academicYearId;
+    }
 
-   private function getStatisticData() {
-       $teachers = Cache::rememberForever('teacherCount' , function () {
-           return   Employee::where('status', AppHelper::ACTIVE)->where('role_id', AppHelper::EMP_TEACHER)->count();
-       });
+    private function getStatisticData()
+    {
+        $teachers = Employee::select('*')->where('role_id', 2)->count();
 
-       $employee = Cache::rememberForever('employeeCount' , function () {
-           return Employee::where('status', AppHelper::ACTIVE)->count();
-       });
-       $academicYearId = $this->getAcademicYearForDashboard();
-       $students = Cache::rememberForever('studentCount' , function () use($academicYearId) {
-           return Registration::where('status', AppHelper::ACTIVE)
-               ->where('academic_year_id', $academicYearId)
-               ->count();
-       });
-       $subjects = Cache::rememberForever('SubjectCount' , function () {
-           return Subject::where('status', AppHelper::ACTIVE)->count();
-       });
+        $employee = Cache::rememberForever('employeeCount', function () {
+            return Employee::where('status', AppHelper::ACTIVE)->count();
+        });
+        $academicYearId = $this->getAcademicYearForDashboard();
+        $students = Student::select('*')->count();
 
-       return [$teachers, $employee, $students, $subjects];
-   }
+        $subjects = Subject::all()->count();
 
-   private function getSmsChartData() {
-       $smsSend = Cache::rememberForever('smsChartData' , function () {
-           $allMonthSmsSended =  smsLog::selectRaw('count(id) as send,MONTH(created_at) as month')
-               ->whereYear('created_at', date('Y'))
-               ->groupby('month')
-               ->get();
+        return [$teachers, $employee, $students, $subjects];
+    }
 
-           return $allMonthSmsSended;
-       });
+    private function getSmsChartData()
+    {
+        $smsSend = Cache::rememberForever('smsChartData', function () {
+            $allMonthSmsSended = smsLog::selectRaw('count(id) as send,MONTH(created_at) as month')
+                ->whereYear('created_at', date('Y'))
+                ->groupby('month')
+                ->get();
 
-       $smsSend = $smsSend->reduce(function ($smsSend, $record){
-           $smsSend[$record->month] = $record->send;
-           return $smsSend;
-       });
+            return $allMonthSmsSended;
+        });
 
-       $monthWiseSms['Jan'] = $smsSend[1] ?? 0;
-       $monthWiseSms['Feb'] = $smsSend[2] ?? 0;
-       $monthWiseSms['Mar'] = $smsSend[3] ?? 0;
-       $monthWiseSms['Apr'] = $smsSend[4] ?? 0;
-       $monthWiseSms['May'] = $smsSend[5] ?? 0;
-       $monthWiseSms['Jun'] = $smsSend[6] ?? 0;
-       $monthWiseSms['Jul'] = $smsSend[7] ?? 0;
-       $monthWiseSms['Aug'] = $smsSend[8] ?? 0;
-       $monthWiseSms['Sep'] = $smsSend[9] ?? 0;
-       $monthWiseSms['Oct'] = $smsSend[10] ?? 0;
-       $monthWiseSms['Nov'] = $smsSend[11] ?? 0;
-       $monthWiseSms['Dec'] = $smsSend[12] ?? 0;
+        $smsSend = $smsSend->reduce(function ($smsSend, $record) {
+            $smsSend[$record->month] = $record->send;
+            return $smsSend;
+        });
 
-       return $monthWiseSms;
-   }
+        $monthWiseSms['Jan'] = $smsSend[1] ?? 0;
+        $monthWiseSms['Feb'] = $smsSend[2] ?? 0;
+        $monthWiseSms['Mar'] = $smsSend[3] ?? 0;
+        $monthWiseSms['Apr'] = $smsSend[4] ?? 0;
+        $monthWiseSms['May'] = $smsSend[5] ?? 0;
+        $monthWiseSms['Jun'] = $smsSend[6] ?? 0;
+        $monthWiseSms['Jul'] = $smsSend[7] ?? 0;
+        $monthWiseSms['Aug'] = $smsSend[8] ?? 0;
+        $monthWiseSms['Sep'] = $smsSend[9] ?? 0;
+        $monthWiseSms['Oct'] = $smsSend[10] ?? 0;
+        $monthWiseSms['Nov'] = $smsSend[11] ?? 0;
+        $monthWiseSms['Dec'] = $smsSend[12] ?? 0;
 
-   private function getClassWiseTodayAttendanceCount() {
-       $academicYearId = $this->getAcademicYearForDashboard();
-       $iclasses = Cache::rememberForever('student_attendance_count' , function () use($academicYearId) {
-           return  IClass::where('status', AppHelper::ACTIVE)
-               ->with(['attendance' => function ($query) use ($academicYearId) {
-                   $query->selectRaw('class_id,present,count(registration_id) as total')
-                       ->where('academic_year_id', $academicYearId)
-                       ->whereDate('attendance_date', date('Y-m-d'))
+        return $monthWiseSms;
+    }
+
+    private function getClassWiseTodayAttendanceCount()
+    {
+        $academicYearId = $this->getAcademicYearForDashboard();
+        $iclasses = Cache::rememberForever('student_attendance_count', function () use ($academicYearId) {
+            return IClass::where('status', AppHelper::ACTIVE)
+                ->with(['attendance' => function ($query) use ($academicYearId) {
+                    $query->selectRaw('class_id,present,count(registration_id) as total')
+                        ->where('academic_year_id', $academicYearId)
+                        ->whereDate('attendance_date', date('Y-m-d'))
 //                        ->whereDate('attendance_date', '2019-03-02')
-                       ->groupBy('class_id', 'present');
-               }])
-               ->select('id', 'name')
-               ->get();
-       });
+                        ->groupBy('class_id', 'present');
+                }])
+                ->select('id', 'name')
+                ->get();
+        });
 
-       $attendanceChartPresentData = [];
-       $attendanceChartAbsentData = [];
-       foreach ($iclasses as $iclass) {
-           $attendanceChartPresentData[$iclass->name] = 0;
-           $attendanceChartAbsentData[$iclass->name] = 0;
-           foreach ($iclass->attendance as $attendanceSummary) {
-               if ($attendanceSummary->present == "Present") {
-                   $attendanceChartPresentData[$iclass->name] = $attendanceSummary->total;
-               } else {
-                   $attendanceChartAbsentData[$iclass->name] = $attendanceSummary->total;
+        $attendanceChartPresentData = [];
+        $attendanceChartAbsentData = [];
+        foreach ($iclasses as $iclass) {
+            $attendanceChartPresentData[$iclass->name] = 0;
+            $attendanceChartAbsentData[$iclass->name] = 0;
+            foreach ($iclass->attendance as $attendanceSummary) {
+                if ($attendanceSummary->present == "Present") {
+                    $attendanceChartPresentData[$iclass->name] = $attendanceSummary->total;
+                } else {
+                    $attendanceChartAbsentData[$iclass->name] = $attendanceSummary->total;
 
-               }
-           }
-       }
+                }
+            }
+        }
 
-       return [$attendanceChartPresentData, $attendanceChartAbsentData];
-   }
+        return [$attendanceChartPresentData, $attendanceChartAbsentData];
+    }
 
-   private function getClassWiseStudentCount()
-   {
-       $academicYearId = $this->getAcademicYearForDashboard();
-       $studentCount = Cache::rememberForever('student_count_by_class', function () use ($academicYearId) {
-         return  IClass::where('status', AppHelper::ACTIVE)
-               ->with(['student' => function ($query) use ($academicYearId) {
-                   $query->where('status', AppHelper::ACTIVE)
-                       ->where('academic_year_id', $academicYearId)
-                       ->selectRaw('class_id, count(*) as total')
-                       ->groupBy('class_id');
-               }])
-               ->select('id', 'name')
-               ->orderBy('numeric_value', 'asc')
-               ->get();
-       });
+    private function getClassWiseStudentCount()
+    {
+        $academicYearId = $this->getAcademicYearForDashboard();
+        $studentCount = Cache::rememberForever('student_count_by_class', function () use ($academicYearId) {
+            return IClass::where('status', AppHelper::ACTIVE)
+                ->with(['student' => function ($query) use ($academicYearId) {
+                    $query->where('status', AppHelper::ACTIVE)
+                        ->where('academic_year_id', $academicYearId)
+                        ->selectRaw('class_id, count(*) as total')
+                        ->groupBy('class_id');
+                }])
+                ->select('id', 'name')
+                ->orderBy('numeric_value', 'asc')
+                ->get();
+        });
 
-       return $studentCount;
-   }
+        return $studentCount;
+    }
 
-   private function getSectionWiseStudentCountForSpecificClasses() {
-       $academicYearId = $this->getAcademicYearForDashboard();
-       $selectedClassNumericValues = explode(',', env('DASHBOARD_SECTION_STUDENT_CLASS_CODE', '90,91,92,100,101,102'));
-       $selectedClasses = Cache::rememberForever('selected_classes_4_dashboard', function () use ($selectedClassNumericValues) {
-          return IClass::where('status', AppHelper::ACTIVE)
-               ->whereIn('numeric_value', $selectedClassNumericValues)->pluck('id');
-       });
+    private function getSectionWiseStudentCountForSpecificClasses()
+    {
+        $academicYearId = $this->getAcademicYearForDashboard();
+        $selectedClassNumericValues = explode(',', env('DASHBOARD_SECTION_STUDENT_CLASS_CODE', '90,91,92,100,101,102'));
+        $selectedClasses = Cache::rememberForever('selected_classes_4_dashboard', function () use ($selectedClassNumericValues) {
+            return IClass::where('status', AppHelper::ACTIVE)
+                ->whereIn('numeric_value', $selectedClassNumericValues)->pluck('id');
+        });
 
-       $sectionStudentCount = Cache::rememberForever('student_count_by_section', function () use ($selectedClasses, $academicYearId) {
-          return  Section::where('status', AppHelper::ACTIVE)
-               ->whereIn('class_id', $selectedClasses)
-               ->with(['student' => function ($query) use ($academicYearId) {
-                   $query->where('status', AppHelper::ACTIVE)
-                       ->where('academic_year_id', $academicYearId)
-                       ->selectRaw('section_id, count(*) as total')
-                       ->groupBy('section_id');
-               }])
-               ->with(['class' => function ($query) {
-                   $query->select('id', 'name');
-               }])
-               ->select('id', 'name', 'class_id')
-               ->orderBy('class_id', 'asc')
-               ->orderBy('name', 'asc')
-               ->get();
-       });
+        $sectionStudentCount = Cache::rememberForever('student_count_by_section', function () use ($selectedClasses, $academicYearId) {
+            return Section::where('status', AppHelper::ACTIVE)
+                ->whereIn('class_id', $selectedClasses)
+                ->with(['student' => function ($query) use ($academicYearId) {
+                    $query->where('status', AppHelper::ACTIVE)
+                        ->where('academic_year_id', $academicYearId)
+                        ->selectRaw('section_id, count(*) as total')
+                        ->groupBy('section_id');
+                }])
+                ->with(['class' => function ($query) {
+                    $query->select('id', 'name');
+                }])
+                ->select('id', 'name', 'class_id')
+                ->orderBy('class_id', 'asc')
+                ->orderBy('name', 'asc')
+                ->get();
+        });
 
-       return $sectionStudentCount;
+        return $sectionStudentCount;
 
-   }
+    }
 }

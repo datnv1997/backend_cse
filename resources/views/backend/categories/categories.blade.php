@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Student @endsection
+@section('pageTitle') Danh Mục @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -14,13 +14,10 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Categories
-        <small>List</small>
+        Danh mục
+        <small>danh sách</small>
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{URL::route('user.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Categories</li>
-    </ol>
+    
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -48,7 +45,7 @@
                     </div>
                     <div class="box-tools pull-right">
                         <a class="btn btn-info btn-sm" href="{{ URL::route('user.addCate') }}"><i
-                                class="fa fa-plus-circle"></i> Add New</a>
+                                class="fa fa-plus-circle"></i> Thêm mới</a>
                     </div>
                 </div>
                 <!-- /.box-header -->

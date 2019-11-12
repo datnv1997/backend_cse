@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Events @endsection
+@section('pageTitle') Sự kiện @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -14,14 +14,10 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Events
-        <small>List</small>
+        Sự kiện
+        <small>Danh sách</small>
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{URL::route('site.dashboard')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="#"><i class="fa icon-teacher"></i> Events</a></li>
 
-    </ol>
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -30,11 +26,11 @@
         <div class="col-md-12">
             <div class="box box-info">
                 <div class="box-header">
-                    <h3 class="box-title">Events</h3>
+                    <h3 class="box-title">Sự kiện</h3>
 
                     <div class="box-tools pull-right">
                         <a class="btn btn-info btn-sm" href="{{ URL::route('event.create') }}"><i
-                                class="fa fa-plus-circle"></i> Add New</a>
+                                class="fa fa-plus-circle"></i> Thêm mới</a>
                     </div>
                 </div>
                 <!-- /.box-header -->

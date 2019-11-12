@@ -42,7 +42,7 @@ Route::get(
 )->name('setLocale');
 
 Route::group(
-    ['namespace' => 'Backend', 'middleware' => ['auth', 'permission']], function () {
+    ['namespace' => 'Backend', 'middleware' => ['auth']], function () {
 
         /**
          * Website contents routes

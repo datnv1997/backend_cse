@@ -75,7 +75,7 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa icon-academicmain"></i>
-                    <span>Academic</span>
+                    <span>Khối</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -118,7 +118,7 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-user-secret"></i>
-                    <span>Administrator</span>
+                    <span>Quản trị viên</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -126,11 +126,11 @@
                 <ul class="treeview-menu">
 
 
-                    <li>
+                    <!-- <li>
                         <a href="{{URL::route('administrator.user_index')}}">
                             <i class="fa fa-user-md"></i> <span>System Admin</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="{{route('administrator.user_password_reset')}}">
                             <i class="fa fa-eye-slash"></i> <span>Đặt lại mật khẩu</span>

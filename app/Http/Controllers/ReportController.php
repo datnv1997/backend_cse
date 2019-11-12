@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\IClass;
+use App\Student;
 use App\StudentAttendance;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,7 @@ class ReportController extends Controller
         $allData = StudentAttendance::all()->where('class_id', $id);
         $arrayDate = [];
         $dataPresent = [];
-        $sumStudent = [];
+        $sumStudent = Student::select("*")->where('class_id', $id)->count();
 
         foreach ($allData as $data) {
             // if()
@@ -51,9 +52,9 @@ class ReportController extends Controller
                 }
             }
             array_push($dataPresent, $count);
-            array_push($sumStudent, $sum);
 
         }
+        //  dd()
         return view('backend.reportAttendance.reportAttendance', compact('arrayDate', 'dataPresent', 'sumStudent', 'id'));
 
     }

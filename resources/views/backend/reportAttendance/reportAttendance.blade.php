@@ -15,7 +15,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
 <section class="content-header">
     <h1>
-        Thống kế điểm danh mã lớp học phần: {{$id}}
+        Thống kế điểm danh:<br>
+        Mã lớp học phần: {{$id}}
     </h1>
 
 </section>
@@ -80,7 +81,7 @@ var myChart = new Chart(ctx, {
             yAxes: [{
 
                 ticks: {
-                    suggestedMax: sumStudentIclass[0],
+                    suggestedMax: sumStudentIclass,
                     beginAtZero: true,
                     stepSize: 1,
 

@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 <!-- Page title -->
-@section('pageTitle') Categories @endsection
+@section('pageTitle') Danh Mục @endsection
 <!-- End block -->
 
 <!-- Page body extra class -->
@@ -14,13 +14,9 @@
 <!-- Section header -->
 <section class="content-header">
     <h1>
-        Add Category
+        Thêm Mới
     </h1>
-    <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><i class="fa icon-student"></i> Category</a></li>
-        <li class="active">Update</li>
-    </ol>
+
 </section>
 <!-- ./Section header -->
 <!-- Main content -->
@@ -65,17 +61,17 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group has-feedback">
-                                    <label for="photo">Photo<span class="text-danger">[min 150 X 150 size and max
-                                            200kb]</span></label>
+                                    <label for="photo">Photo<span class="text-danger"></span></label>
                                     <input type="file" class="form-control" accept=".jpeg, .jpg, .png" name="photo"
-                                        placeholder="Photo image" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                                        placeholder="Photo image"
+                                        onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
 
                                     <span class="glyphicon glyphicon-open-file form-control-feedback"></span>
                                     <span class="text-danger">{{ $errors->first('photo') }}</span>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                               <img id="output" width="200px" height="100px" >
+                                <img id="output" width="200px" height="100px">
                             </div>
                         </div>
                         <div class="row">
@@ -93,9 +89,9 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="" class="btn btn-default">Cancel</a>
+                        <a href="" class="btn btn-default">Hủy bỏ</a>
                         <button type="submit" class="btn btn-info pull-right"><i
-                                class="fa fa-refresh fa-plus-circle"></i> Add </button>
+                                class="fa fa-refresh fa-plus-circle"></i> Thêm mới </button>
 
                     </div>
                 </form>

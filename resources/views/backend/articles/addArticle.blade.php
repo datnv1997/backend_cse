@@ -95,9 +95,9 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="/articles" class="btn btn-default">Cancel</a>
+                        <a href="/articles" class="btn btn-default">Hủy bỏ</a>
                         <button type="submit" class="btn btn-info pull-right"><i
-                                class="fa fa-refresh fa-plus-circle"></i> Add </button>
+                                class="fa fa-refresh fa-plus-circle"></i> thêm </button>
 
                     </div>
                 </form>

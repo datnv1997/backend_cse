@@ -61,7 +61,7 @@ class LessonController extends Controller
     public function formAddLesson()
     {
         $teacher = Employee::select('*')->where('role_id', 2)->get();
-        $category = Categories::all();
+        $category = Categories::select('*')->where('parentId', 4)->get();
         $subject = Subject::all();
         return view('backend.lesson.addLesson', compact('teacher', 'category', 'subject'));
     }

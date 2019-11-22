@@ -44,7 +44,7 @@
                                     <th width="15%">mã năm học</th>
                                     <th width="15%">mã học kì</th>
                                     <th width="15%">mã giai đoạn</th>
-                                    <th width="15%">mã lớp học</th>
+                                    <th width="15%">mã môn học</th>
                                     <th width="5%">Ghi chú</th>
                                     <!-- <th width="10%">Status</th> -->
                                     <th class="notexport" width="10%">Thao tác</th>

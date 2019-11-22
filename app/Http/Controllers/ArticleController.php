@@ -311,7 +311,7 @@ class ArticleController extends Controller
     public function getArticleBanner()
     {
         $id = 32;
-        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(3)->get();
+        $data = Articles::select('*')->where('categoryIds', $id)->orderBy('createdDate', 'DESC')->take(4)->get();
 
         if (count($data) > 0) {
             return response()->json([

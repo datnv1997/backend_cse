@@ -25,27 +25,27 @@ class EventController extends Controller
     public function store(Request $request)
     {
         //validate form
-        $messages = [
-            'slider_1.max' => 'The :attribute size must be under 2MB.',
-            'slider_1.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'slider_2.max' => 'The :attribute size must be under 2MB.',
-            'slider_2.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'slider_3.max' => 'The :attribute size must be under 2MB.',
-            'slider_3.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'cover_photo.max' => 'Nhập ảnh quá tối đa 2MB.',
-            'cover_photo.dimensions' => 'The :attribute dimensions must be minimum 370 X 270.',
-        ];
-        $this->validate($request, [
-            'title' => 'required|min:5|max:255',
-            'event_time' => 'required|min:5|max:255',
-            'cover_photo' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=370,min_height=270',
-            'slider_1' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
-            'slider_2' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
-            'slider_3' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
-            'description' => 'required',
-            // 'tags' => 'max:255',
-            'cover_videos' => 'max:255',
-        ], $messages);
+        // $messages = [
+        //     'slider_1.max' => 'The :attribute size must be under 2MB.',
+        //     'slider_1.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
+        //     'slider_2.max' => 'The :attribute size must be under 2MB.',
+        //     'slider_2.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
+        //     'slider_3.max' => 'The :attribute size must be under 2MB.',
+        //     'slider_3.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
+        //     'cover_photo.max' => 'Nhập ảnh quá tối đa 2MB.',
+        //     'cover_photo.dimensions' => 'The :attribute dimensions must be minimum 370 X 270.',
+        // ];
+        // $this->validate($request, [
+        //     'title' => 'required|min:5|max:255',
+        //     'event_time' => 'required|min:5|max:255',
+        //     'cover_photo' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=370,min_height=270',
+        //     'slider_1' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
+        //     'slider_2' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
+        //     'slider_3' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
+        //     'description' => 'required',
+        //     // 'tags' => 'max:255',
+        //     'cover_videos' => 'max:255',
+        // ], $messages);
 
         $data = $request->all();
         $datetime = Carbon::createFromFormat('d/m/Y h:i a', $data['event_time']);
@@ -77,27 +77,27 @@ class EventController extends Controller
     public function update(Request $request, $id)
     {
         //validate form
-        $messages = [
-            'slider_1.max' => 'The :attribute size must be under 2MB.',
-            'slider_1.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'slider_2.max' => 'The :attribute size must be under 2MB.',
-            'slider_2.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'slider_3.max' => 'The :attribute size must be under 2MB.',
-            'slider_3.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
-            'cover_photo.max' => 'The :attribute size must be under 2MB.',
-            'cover_photo.dimensions' => 'The :attribute dimensions must be minimum 370 X 270.',
-        ];
-        $this->validate($request, [
-            'title' => 'required|min:5|max:255',
-            'event_time' => 'required|min:5|max:255',
-            'cover_photo' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=370,min_height=270',
-            'slider_1' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
-            'slider_2' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
-            'slider_3' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
-            'description' => 'required',
-            // 'tags' => 'max:255',
-            'cover_videos' => 'max:255',
-        ], $messages);
+        // $messages = [
+        //     'slider_1.max' => 'The :attribute size must be under 2MB.',
+        //     'slider_1.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
+        //     'slider_2.max' => 'The :attribute size must be under 2MB.',
+        //     'slider_2.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
+        //     'slider_3.max' => 'The :attribute size must be under 2MB.',
+        //     'slider_3.dimensions' => 'The :attribute dimensions must be minimum 1170 X 580.',
+        //     'cover_photo.max' => 'The :attribute size must be under 2MB.',
+        //     'cover_photo.dimensions' => 'The :attribute dimensions must be minimum 370 X 270.',
+        // ];
+        // $this->validate($request, [
+        //     'title' => 'required|min:5|max:255',
+        //     'event_time' => 'required|min:5|max:255',
+        //     'cover_photo' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=370,min_height=270',
+        //     'slider_1' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
+        //     'slider_2' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
+        //     'slider_3' => 'mimes:jpeg,jpg,png|max:2048|dimensions:min_width=1170,min_height=580',
+        //     'description' => 'required',
+        //     // 'tags' => 'max:255',
+        //     'cover_videos' => 'max:255',
+        // ], $messages);
 
         $data = $request->all();
         $datetime = Carbon::createFromFormat('d/m/Y h:i a', $data['event_time']);
@@ -194,7 +194,7 @@ class EventController extends Controller
 
     public function listTopEvent()
     {
-        $event = Event::select('*')->orderBy('created_at', 'DESC')->take(3)->get();
+        $event = Event::select('*')->orderBy('created_at', 'DESC')->take(4)->get();
 
         if (count($event) > 0) {
             return response()->json([
